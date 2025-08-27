@@ -173,6 +173,10 @@ function module.new(SuperInject:() -> SuperInject)
 
             return Signals.CreateReadOnlySignal(Changed)
         end;
+
+        IsA = function(self, Type:string)
+            return self.ClassName == Type
+        end
     }
 
     for I, item in pairs(Property_Types) do

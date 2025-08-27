@@ -118,13 +118,6 @@ function module.new(SuperInject)
                     recurse(self.Children)
                     return descendants
                 end
-            },
-
-            {
-                Name = "IsA",
-                Code = function(self, typeName:string)
-                    return self.ClassName == typeName
-                end
             }
         }
 
