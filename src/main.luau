@@ -2,18 +2,6 @@ local Game = require("@packages/Game")
 
 local Task, Instance, Udim, Color4 = Game:GetCommonUtils()
 
-Task.spawn(function()
-    print("ran")
-end)
-
-Task.spawn(function()
-    print("ran2")
-end)
-
-Task.delay(5, function()
-    print("ran")
-end)
-
 local NewFrame:UI2D = Instance.new("Frame")
 
 NewFrame.Size = Udim.FromScale(0.5, 0.5)
@@ -35,8 +23,16 @@ Game.Workspace.Color = Color4.White()
 
 Task.spawn(function()
     while true do
-        SecondFrame.Rotation += 0.5
+        if SecondFrame.Destroyed ~= true then
+            SecondFrame.Rotation += 0.5
+        end
+        
         NewFrame.Rotation -= 0.25
         Task.wait(0.03)
     end
+end)
+
+
+Task.delay(5, function()
+    SecondFrame:Destroy()
 end)

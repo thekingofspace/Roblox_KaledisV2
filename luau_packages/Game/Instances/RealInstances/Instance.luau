@@ -54,7 +54,11 @@ function module.new(SuperInject:() -> SuperInject)
 
     RealSelf.ExposedValues = {
         Changed_Signal = Signals.CreateSignal();
-        Destroyed = false
+        Destroyed = false;
+        Tags = {};
+        Attribute = {};
+        ChangedSignals_AT = {};
+        ChangedSignals_PR = {}
     }
 
     RealSelf.Properties = {
@@ -90,12 +94,21 @@ function module.new(SuperInject:() -> SuperInject)
                     RealSelf.Overides["Destroy"](self)
                 end
 
+                for I, item:Signal in ipairs(RealSelf.ExposedValues.ChangedSignals_AT) do
+                    item:Destroy()
+                end
+
+                for I, item:Signal in ipairs(RealSelf.ExposedValues.ChangedSignals_PR) do
+                    item:Destroy()
+                end
+
                 RealSelf.ExposedValues.Changed_Signal:Destroy()
                 table.clear(RealSelf.Properties)
                 table.clear(RealSelf.HookedTypes)
                 table.clear(RealSelf.Methods)
                 table.clear(RealSelf.Transforms)
                 table.clear(RealSelf.Overides)
+                table.clear(RealSelf.ExposedValues)
 
                 RealSelf.ExposedValues.Destroyed = true
             end)
@@ -123,7 +136,43 @@ function module.new(SuperInject:() -> SuperInject)
 
         PrivateAccess = function(self, Transform:(RealSelf:any) -> any)
             RealSelf = Transform(RealSelf)
-        end
+        end;
+
+        GetAttribute = function(self,  Attribute:string)
+            return  self.Attribute[Attribute]
+        end;
+
+        SetAttribute = function(self,  Attribute:string, NewValue:any)
+            self.Attribute[Attribute] = NewValue
+
+            if self.ChangedSignals_AT[Attribute] then
+                self.ChangedSignals_AT[Attribute]:Fire(NewValue)
+            end
+        end;
+
+        GetAttributeChangedSignal = function(self, Attribute:string)
+            if self.ChangedSignals_AT[Attribute] then
+                return self.ChangedSignals_AT[Attribute]
+            end
+
+            local Changed = Signals.CreateSignal()
+            
+            self.ChangedSignals_AT[Attribute] = Changed
+
+            return Signals.CreateReadOnlySignal(Changed)
+        end;
+
+        GetPropertyChangedSignal = function(self, Property:string)
+            if self.ChangedSignals_PR[Property] then
+                return self.ChangedSignals_PR[Property]
+            end
+
+            local Changed = Signals.CreateSignal()
+            
+            self.ChangedSignals_PR[Property] = Changed
+
+            return Signals.CreateReadOnlySignal(Changed)
+        end;
     }
 
     for I, item in pairs(Property_Types) do
@@ -197,6 +246,11 @@ function module.new(SuperInject:() -> SuperInject)
             RealSelf.Properties[Index] = FinalValue
 
             RealSelf.ExposedValues.Changed_Signal:Fire(Index, NewValue)
+
+
+            if self.ChangedSignals_PR[Index] then
+                self.ChangedSignals_PR[Index]:Fire(NewValue)
+            end
         else
             if Type == "frozen" then
                 error(`{Index} Is only read only.`)

@@ -4,9 +4,14 @@ export type Instance = {
     ID:number;
     Changed:ReadOnlySignal<string, any>,
     Type:string;
+    Destroyed:boolean;
 
     Destroy:(self:Instance) -> nil;
     Clone:(self:Instance) -> any;
+    GetAttribute:(self:Instance, Attribute:string) ->  any;
+    SetAttribute:(self:Instance, Attribute:string, Newvalue:any) ->  nil;
+    GetAttributeChangedSignal:(self:Instance, Attribute:string) ->  ReadOnlySignal<any>;
+    GetPropertyChangedSignal:(self:Instance, Property:string) ->  ReadOnlySignal<any>;
 }
 
 export type UI2D = Instance & {
