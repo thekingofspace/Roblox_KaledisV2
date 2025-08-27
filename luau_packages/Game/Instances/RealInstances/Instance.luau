@@ -1,0 +1,263 @@
+local module =  {}
+local InstanceStorage = require("@game/InstanceStorage")
+local ID_Generator = require("@game/ID_Generator")
+local SignalStorage = require("@game/SignalStorage")
+local Signals = require("@game/Vendors/signal")
+local Task = require("@game/KeyWords/Task")
+
+local function CheckType(ID: string, Value, Properties)
+    local prop = Properties[ID]
+
+    if prop == "frozen" then
+        return false, prop
+    end
+
+    if typeof(prop) == "string" then
+        if typeof(Value) == "table" and Value.Type ~= nil then
+            return Value.Type == prop, prop
+        else
+            return typeof(Value) == prop, prop
+        end
+    end
+
+    if typeof(prop) == "table" then
+        for _, item in ipairs(prop) do
+            if typeof(Value) == item then
+                return true, prop
+            end
+        end
+
+        for _, item in ipairs(prop) do
+            if typeof(Value) == "table" and item == Value.Type then
+                return true, prop
+            end
+        end
+
+        return false, prop
+    end
+
+    return false, prop
+end
+
+local Property_Types = {
+    Name = "string";
+    ClassName = "frozen",
+    ID = "frozen",
+    Changed = "frozen",
+    Type = "string"
+}
+
+function module.new(SuperInject:() -> SuperInject)
+    local self  = {}
+
+    local RealSelf = {}
+
+    RealSelf.ExposedValues = {
+        Changed_Signal = Signals.CreateSignal();
+        Destroyed = false
+    }
+
+    RealSelf.Properties = {
+        Name = "Instance";
+        ClassName = "Instance";
+        ID = ID_Generator:GetUniqueID();
+        Changed = Signals.CreateReadOnlySignal(RealSelf.ExposedValues.Changed_Signal),
+        Type = "instance"
+    }
+
+    RealSelf.HookedTypes = {}
+    RealSelf.Overides = {}
+
+    RealSelf.Transforms = {
+        Read = {};
+
+        Write = {}
+    }
+
+    RealSelf.Methods = {
+        Destroy = function(self)
+            if self.Destroyed == true then
+                return
+            end
+
+            Task.spawn(function()
+                if self.Draw ~= nil then
+                    InstanceStorage.Drawable[self.ID] = nil
+                    SignalStorage.RenderStep:Wait()
+                end
+
+                if RealSelf.Overides["Destroy"] then
+                    RealSelf.Overides["Destroy"](self)
+                end
+
+                RealSelf.ExposedValues.Changed_Signal:Destroy()
+                table.clear(RealSelf.Properties)
+                table.clear(RealSelf.HookedTypes)
+                table.clear(RealSelf.Methods)
+                table.clear(RealSelf.Transforms)
+                table.clear(RealSelf.Overides)
+
+                RealSelf.ExposedValues.Destroyed = true
+            end)
+        end,
+
+        Clone = function(self)
+            if RealSelf.Overides["Clone"] then
+                RealSelf.Overides["Clone"](self)
+            end
+
+            local Clone = module.new(SuperInject)
+
+            for I, item in pairs(RealSelf.HookedTypes) do
+                if item ~= "frozen" then
+                    if RealSelf.Transforms.Read[I] then
+                       Clone[I] = RealSelf.Transforms.Read[I](RealSelf.Properties[I])
+                    else
+                        Clone[I] = RealSelf.Properties[I]
+                    end
+                end
+            end
+
+            return Clone
+        end,
+
+        PrivateAccess = function(self, Transform:(RealSelf:any) -> any)
+            RealSelf = Transform(RealSelf)
+        end
+    }
+
+    for I, item in pairs(Property_Types) do
+        RealSelf.HookedTypes[I] = item
+    end
+
+    if SuperInject then
+       local SuperData:SuperInject = SuperInject()
+
+       if SuperData.Properties then
+            for I, item in ipairs(SuperData.Properties) do
+                RealSelf.Properties[item.Name] = item.Value;
+
+                RealSelf.HookedTypes[item.Name] = item.Type or typeof(item.Value)
+
+                if item.ReadTransform then
+                    RealSelf.Transforms.Read[item.Name] = item.ReadTransform
+                end
+
+                if item.WriteTransform then
+                    RealSelf.Transforms.Write[item.Name] = item.WriteTransform
+                end
+            end
+       end
+
+       if SuperData.PrivateProperties then
+            for I, item in pairs(SuperData.PrivateProperties) do
+                RealSelf.ExposedValues[I] = item
+            end
+       end
+
+        if SuperData.Methods then
+            for I, item in ipairs(SuperData.Methods) do
+                RealSelf.Methods[item.Name] = function()
+                    if RealSelf.Overides[item.Name] then
+                        RealSelf.Overides[item.Name](self)
+                    end
+
+                    return item.Code(self)
+                end
+            end
+        end
+
+        if SuperData.Extensions then
+            for I, item in ipairs(SuperData.Extensions) do
+                RealSelf.Overides[item.Name] = item.Code
+            end
+        end
+    end
+    
+    local  MT = {}
+
+    MT.__newindex = function(self, Index:string,  NewValue)
+        if RealSelf.ExposedValues[Index] ~= nil then
+            RealSelf.ExposedValues[Index] = NewValue
+        end
+
+        if RealSelf.Properties[Index] == nil then
+            error(`{Index} Is not a property of {RealSelf.Properties.ClassName}`)
+        end
+
+        local Passed, Type = CheckType(Index, NewValue, RealSelf.HookedTypes)
+
+        if Passed  == true then
+            local FinalValue = NewValue
+
+            if RealSelf.Transforms.Write[Index] then
+                FinalValue = RealSelf.Transforms.Write[Index](self, RealSelf.Properties[Index], NewValue)
+            end
+
+            RealSelf.Properties[Index] = FinalValue
+
+            RealSelf.ExposedValues.Changed_Signal:Fire(Index, NewValue)
+        else
+            if Type == "frozen" then
+                error(`{Index} Is only read only.`)
+            end
+
+            if typeof(Type) == "table" then
+                error(`You can only use {table.concat(Type, ", ")} for {Index}`)
+            else
+                error(`You can only use {Type} for {Index}`)
+            end
+        end
+
+        return
+    end
+
+    MT.__index = function(self, Index:string)
+        if RealSelf.ExposedValues.Destroyed == true then
+            if Index  ==  "Destroyed" then
+                return true
+            else
+                return nil
+            end
+        else
+            if RealSelf.Properties[Index] ~= nil then
+                if RealSelf.Transforms.Read[Index] then
+                    return RealSelf.Transforms.Read[Index](self, RealSelf.Properties[Index])
+                else
+                    return RealSelf.Properties[Index]
+                end
+            elseif RealSelf.Methods[Index] ~= nil then
+                return RealSelf.Methods[Index]
+
+            elseif RealSelf.ExposedValues[Index] ~= nil then
+                return RealSelf.ExposedValues[Index]
+            end
+
+            return
+        end
+    end
+
+    MT.__eq = function(self, Instance)
+        if typeof(Instance) ==  "table" then
+            return Instance.ID == self.ID
+        else
+            return false
+        end
+    end
+
+    MT.__tostring =  function(self)
+        return `{self.Name} {self.ID}`
+    end
+
+    self = setmetatable(self, MT)
+
+    if self.Draw then
+        InstanceStorage.Drawable[self.ID] = self
+    else
+        InstanceStorage.Logic[self.ID] = self
+    end
+
+    return self
+end
+
+return module
