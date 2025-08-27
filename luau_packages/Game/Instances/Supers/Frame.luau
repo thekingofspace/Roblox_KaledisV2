@@ -22,6 +22,11 @@ function module.new()
 
         Super.Methods = {}
 
+        Super.Properties = {
+            { Name = "Name",      Value = "Frame" },
+            { Name = "ClassName", Value = "Frame" }
+        }
+
         table.insert(Super.Methods, {
             Name = "Draw";
 
