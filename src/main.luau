@@ -31,6 +31,8 @@ SecondFrame.Rotation = 0
 
 SecondFrame.Color = Color4.FromHex("#77e09c")
 
+Game.Workspace.Color = Color4.White()
+
 Task.spawn(function()
     while true do
         SecondFrame.Rotation += 0.5

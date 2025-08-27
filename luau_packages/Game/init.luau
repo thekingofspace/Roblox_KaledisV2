@@ -53,6 +53,8 @@ Game.Workspace.AnchorPoint = UDIM.FromScale(0.5, 0.5)
 Game.Workspace.Size = UDIM.FromScale(1, 1)
 Game.Workspace.Position = UDIM.FromScale(0.5, 0.5)
 Game.Workspace.Color = Color4.Black()
+Game.Workspace.Name = "Worksapce"
+Game.Workspace.ZIndex =  -999
 
 
 return Game
