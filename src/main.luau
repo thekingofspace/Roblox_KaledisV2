@@ -24,9 +24,12 @@ RightFrame.TouchEnded:Connect(function(Instance)
     print(Instance)
 end)
 
-
 Game.Workspace.Color = Color4.White()
 
 Task.delay(8, function()
     RightFrame:Destroy()
+end)
+
+Game:BindToClose(function()
+    print("goodbye")
 end)

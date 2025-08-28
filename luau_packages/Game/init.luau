@@ -59,5 +59,11 @@ Game.Workspace.ZIndex =  -999
 Game.Workspace.CanQuery = false
 Game.Workspace.SinkInputs = false
 
+function Game:BindToClose(Callback:() -> nil)
+    function love.quit()
+        Callback()
+    end
+end
+
 
 return Game

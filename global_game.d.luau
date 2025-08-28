@@ -67,3 +67,10 @@ export type Color4 = {
     GetSerial: (self:Color4) -> { R: number, G: number, B: number, A: number },
     GetColor: (self:Color4) -> (number, number, number, number)
 }
+
+export type RunService = {
+    RenderStep:ReadOnlySignal<number>;
+    HeartBeat:ReadOnlySignal<>;
+
+    Quit:(self:RunService, Code:number)  -> nil
+}
