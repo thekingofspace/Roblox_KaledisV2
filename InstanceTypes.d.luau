@@ -24,6 +24,8 @@ export type UI2D = Instance & {
     Visible:boolean;
     ZIndex:number;
     Parent:UI2D | nil;
+    CanQuery:boolean;
+    SinkInputs:boolean;
 
     TouchBegan:ReadOnlySignal<UI2D>;
     TouchEnded:ReadOnlySignal<UI2D>;

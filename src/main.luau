@@ -2,37 +2,31 @@ local Game = require("@packages/Game")
 
 local Task, Instance, Udim, Color4 = Game:GetCommonUtils()
 
-local NewFrame:UI2D = Instance.new("Frame")
 
-NewFrame.Size = Udim.FromScale(0.5, 0.5)
-NewFrame.Position = Udim.FromScale(0.5, 0.5)
-NewFrame.AnchorPoint = Udim.FromScale(0.5, 0.5)
-NewFrame.Color = Color4.FromHex("#ab6a4f")
-NewFrame.Rotation = 43
+local LeftFrame:UI2D = Instance.new("Frame")
+LeftFrame.Size = Udim.FromScale(0.6, 0.6)
+LeftFrame.Position = Udim.FromScale(0, 0.5) 
+LeftFrame.AnchorPoint = Udim.FromScale(0, 0.5)
+LeftFrame.Color = Color4.FromHex("#ab6a4f")
 
-local SecondFrame:Frame = NewFrame:Clone()
 
-SecondFrame.Parent  = NewFrame
+local RightFrame:UI2D = Instance.new("Frame")
+RightFrame.Size = Udim.FromScale(0.6, 0.6)
+RightFrame.Position = Udim.FromScale(1, 0.5) 
+RightFrame.AnchorPoint = Udim.FromScale(1, 0.5)
+RightFrame.Color = Color4.FromHex("#4f6aab")
 
-SecondFrame.Size = Udim.FromScale(0.9, 0.9)
-SecondFrame.Rotation = 0
+RightFrame.TouchBegan:Connect(function(Instance)
+    print(Instance)
+end)
 
-SecondFrame.Color = Color4.FromHex("#77e09c")
-
-Game.Workspace.Color = Color4.White()
-
-Task.spawn(function()
-    while true do
-        if SecondFrame.Destroyed ~= true then
-            SecondFrame.Rotation += 0.5
-        end
-        
-        NewFrame.Rotation -= 0.25
-        Task.wait(0.03)
-    end
+RightFrame.TouchEnded:Connect(function(Instance)
+    print(Instance)
 end)
 
 
-Task.delay(5, function()
-    SecondFrame:Destroy()
+Game.Workspace.Color = Color4.White()
+
+Task.delay(8, function()
+    RightFrame:Destroy()
 end)

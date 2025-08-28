@@ -31,6 +31,8 @@ function module.new(SuperInject)
             { Name = "Visible",      Value = true,          Type = "boolean" },
             { Name = "AnchorPoint",  Value = UDIM2.Zero(),  Type = "udim" },
             { Name = "Color",        Value = Color4.White(),Type = "color4" },
+            {Name  = "CanQuery", Value = true, Type = "boolean"},
+            {Name  = "SinkInputs", Value = true, Type = "boolean"},
 
             {
                 Name = "Parent",

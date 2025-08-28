@@ -5,6 +5,10 @@ function module.CreateSignal()
     local SyncConnections = {}
     local AsyncConnections = {}
     local WaitingThreads = {}
+
+    local FireQueue = {}
+    local Iterating = false
+
     self.Constructor = nil
     self.WasConnected = false
     self._Destroyed = false
@@ -97,9 +101,9 @@ function module.CreateSignal()
     end
 
     function self:Fire(...)
+        if self._Destroyed then return end
 
         local args = {...}
-
         if self.Constructor then
             args = {self.Constructor(unpack(args))}
         end
@@ -120,14 +124,25 @@ function module.CreateSignal()
             end)()
         end
 
-        for _, connection in ipairs(SyncConnections) do
-            if connection.IsConnected then
-                connection.Callback(unpack(args))
-            end
-        end
+        table.insert(FireQueue, args)
 
-        if #AsyncConnections == 0 and #SyncConnections == 0 then
-            self.WasConnected = false
+        if not Iterating then
+            Iterating = true
+            coroutine.wrap(function()
+                while #FireQueue > 0 do
+                    local currentArgs = table.remove(FireQueue, 1)
+                    for _, connection in ipairs(SyncConnections) do
+                        if connection.IsConnected then
+                            connection.Callback(unpack(currentArgs))
+                        end
+                    end
+                end
+                Iterating = false
+
+                if #AsyncConnections == 0 and #SyncConnections == 0 then
+                    self.WasConnected = false
+                end
+            end)()
         end
     end
 
@@ -138,6 +153,7 @@ function module.CreateSignal()
         table.clear(SyncConnections)
         table.clear(AsyncConnections)
         table.clear(WaitingThreads)
+        table.clear(FireQueue)
 
         self.WasConnected = false
     end

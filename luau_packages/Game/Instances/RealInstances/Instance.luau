@@ -88,6 +88,8 @@ function module.new(SuperInject:() -> SuperInject)
                 if self.Draw ~= nil then
                     InstanceStorage.Drawable[self.ID] = nil
                     SignalStorage.RenderStep:Wait()
+                else
+                    InstanceStorage.Logic[self.ID] = nil
                 end
 
                 if RealSelf.Overides["Destroy"] then
