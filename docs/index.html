@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Project Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            display: flex;
+            height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        
+        .sidebar h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar li {
+            margin-bottom: 8px;
+        }
+        
+        .sidebar a {
+            text-decoration: none;
+            color: #555;
+            padding: 5px 10px;
+            display: block;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar a:hover {
+            background-color: #e9ecef;
+        }
+        
+        .sidebar a.active {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-width: calc(100% - 250px);
+        }
+        
+        .content h1 {
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .content h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 4px solid #007bff;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+        
+        .error {
+            color: #dc3545;
+            background-color: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #dc3545;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+            }
+            .content {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h3>Documentation</h3>
+        <ul id="nav-list">
+            <li><a href="#" onclick="loadFile('README.md', event)" class="active">README</a></li>
+            <li><a href="#" onclick="loadFile('INSTALL.md', event)">Installation</a></li>
+            <li><a href="#" onclick="loadFile('API.md', event)">API Reference</a></li>
+            <li><a href="#" onclick="loadFile('EXAMPLES.md', event)">Examples</a></li>
+            <li><a href="#" onclick="loadFile('CONTRIBUTING.md', event)">Contributing</a></li>
+        </ul>
+    </div>
+    
+    <div class="content">
+        <div id="content-area" class="loading">
+            Loading README.md...
+        </div>
+    </div>
+
+    <script>
+        const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/thekingofspace/K_Roblox/master/';
+
+        function parseMarkdown(text) {
+            return text
+                .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code>$1</code>')
+                .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+                .replace(/^\* (.*$)/gm, '<li>$1</li>')
+                .replace(/^\d+\. (.*$)/gm, '<li>$1</li>')
+                .replace(/<li>(.*?)<\/li>/g, '<ul><li>$1</li></ul>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/^(?!<[h|u|l|p])/gm, '<p>')
+                .replace(/(?!>)$/gm, '</p>')
+                .replace(/<p><\/p>/g, '')
+                .replace(/<p>(<[h|u|l])/g, '$1')
+                .replace(/(<\/[h|u|l].*>)<\/p>/g, '$1');
+        }
+
+        function loadFile(filename, evt) {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = '<div class="loading">Loading ' + filename + '...</div>';
+
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+            if(evt) evt.target.classList.add('active');
+
+            const url = GITHUB_RAW_BASE + filename;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('File not found: ' + filename);
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    let html;
+                    if (filename.endsWith('.md')) {
+                        html = parseMarkdown(text);
+                    } else {
+                        html = '<h1>' + filename + '</h1><pre><code>' + text + '</code></pre>';
+                    }
+                    contentArea.innerHTML = html;
+                })
+                .catch(error => {
+                    contentArea.innerHTML = `
+                        <div class="error">
+                            <h2>Error Loading File</h2>
+                            <p>Could not load <strong>${filename}</strong></p>
+                            <p><em>${error.message}</em></p>
+                        </div>
+                    `;
+                });
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFile('README.md');
+        });
+    </script>
+</body>
+</html>
