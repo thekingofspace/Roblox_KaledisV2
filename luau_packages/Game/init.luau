@@ -2,16 +2,19 @@ local Game = {}
 
 local SignalStorage = require("@self/SignalStorage")
 local Signal = require("@self/Vendors/signal")
-local Task = require("@self/KeyWords/Task")
-local Instance = require("@self/KeyWords/Instance")
-local TweenInfo = require("@self/KeyWords/TweenInfo")
-local Enum = require("@self/KeyWords/Enum")
-local UDIM = require("@self/Types/Udim")
-local Color4 = require("@self/Types/Color4")
-local GetService = require("@self/ServiceGetter")
 
 SignalStorage.HeartBeat = Signal.CreateSignal()
 SignalStorage.RenderStep = Signal.CreateSignal()
+
+local Instance = require("@self/KeyWords/Instance")
+local Task = require("@self/KeyWords/Task")
+local TweenInfo = require("@self/KeyWords/TweenInfo")
+local Enum = require("@self/KeyWords/Enum")
+
+local UDIM = require("@self/Types/Udim")
+local Color4 = require("@self/Types/Color4")
+
+local GetService = require("@self/ServiceGetter")
 
 local Injects = {
     ["Draw"] = {

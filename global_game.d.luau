@@ -149,3 +149,21 @@ export type Tween = {
 export type TweenService = {
     Create: (self: TweenService, instance: Instance, info: TweenInfo, properties: TweenProperties) -> Tween
 }
+
+export type StoreEntry = {
+    Key: string,
+    Value: any
+}
+
+export type DataStore = {
+    folder: string,
+    SetAsync: (self: DataStore, key: string, value: any) -> (),
+    GetAsync: (self: DataStore, key: string) -> any?,
+    ListStores: (self: DataStore) -> {StoreEntry},
+    UpdateAsync:(self:DataStore, Key:string,Callback:(OldData:any) -> any) -> nil
+}
+
+export type DataStoreService = {
+    GetDataStore: (self: DataStoreService, DataStore: string?) -> DataStore,
+    ListDataStores: (self: DataStoreService) -> {string},
+}

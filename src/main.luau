@@ -1,7 +1,6 @@
 local Game = require("@packages/Game")
 
 local Task, Instance, Udim, Color4, TweenInfo, Enum = Game:GetCommonUtils()
-local RunService:RunService = Game:GetService("RunService")
 
 local LeftFrame:UI2D = Instance.new("Frame")
 LeftFrame.Size = Udim.FromScale(0.6, 0.6)
