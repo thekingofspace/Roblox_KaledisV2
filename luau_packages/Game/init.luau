@@ -18,12 +18,16 @@ local Injects = {
 
 local Task = require("@self/KeyWords/Task")
 local Instance = require("@self/KeyWords/Instance")
+local TweenInfo = require("@self/KeyWords/TweenInfo")
+local Enum = require("@self/KeyWords/Enum")
 
 local UDIM = require("@self/Types/Udim")
 local Color4 = require("@self/Types/Color4")
 
+local GetService = require("@self/ServiceGetter")
+
 function Game:GetCommonUtils()
-    return Task, Instance, UDIM, Color4
+    return Task, Instance, UDIM, Color4, TweenInfo, Enum
 end
 
 local lastTime = love.timer.getTime()
@@ -63,6 +67,11 @@ function Game:BindToClose(Callback:() -> nil)
     function love.quit()
         Callback()
     end
+end
+
+
+function Game:GetService(Service:GetService.Services)
+   return GetService(Service)
 end
 
 

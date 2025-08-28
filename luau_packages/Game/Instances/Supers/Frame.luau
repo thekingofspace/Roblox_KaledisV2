@@ -65,7 +65,7 @@ function module.new()
                 local centerY = Y + Height * self.AnchorPoint.Y.Scale
 
                 love.graphics.translate(centerX, centerY)
-                love.graphics.rotate(TrueRotation)
+                love.graphics.rotate(math.rad(TrueRotation))
                 love.graphics.translate(-centerX, -centerY)
 
                 love.graphics.rectangle("fill", X, Y, Width, Height)
@@ -100,7 +100,7 @@ function module.new()
                 local truePosition:UDim = Udim2.FromScale(truePosX, truePosY)
                 local X, Y = truePosition:ToAbsolute()
 
-                return X, Y, Width, Height, TrueRotation 
+                return X, Y, Width, Height, math.rad(TrueRotation) 
             end
         })
 
