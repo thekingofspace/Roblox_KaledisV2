@@ -21,7 +21,6 @@ RightFrame.Color = Color4.FromHex("#4f6aab")
 RightFrame.Parent = LeftFrame
 RightFrame:AddTag("Test")
 LogService:Push("Created frame 2")
-
 local TweenService = require("@game/Services/TweenService")
 
 
@@ -38,6 +37,8 @@ Task.spawn(function()
     Tween = TweenService:Create(RightFrame, TweenInfo.New(5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Color = Color4.FromHex("#4f6aab"),  Rotation = 0})
 
     Tween:Play()
+    Tween.Completed:Wait()
+    
     LogService:Push("Finished  Loop")
 end)
 

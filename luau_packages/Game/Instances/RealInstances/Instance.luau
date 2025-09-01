@@ -322,6 +322,14 @@ function module.new(SuperInject:() -> SuperInject)
         return `{self.Name} {self.ID}`
     end
 
+    MT.__len = function()
+        return nil
+    end
+
+    MT.__iter = function()
+        error("You can not iterate a instance.")
+    end
+
     self = setmetatable(self, MT)
 
     if self.Draw then
