@@ -4,6 +4,7 @@ local ID_Generator = require("@game/ID_Generator")
 local SignalStorage = require("@game/SignalStorage")
 local Signals = require("@game/Vendors/signal")
 local Task = require("@game/KeyWords/Task")
+local CollectionService = require("@game/Services/CollectionService")
 
 local function CheckType(ID: string, Value, Properties)
     local prop = Properties[ID]
@@ -92,6 +93,10 @@ function module.new(SuperInject:() -> SuperInject)
                     InstanceStorage.Logic[self.ID] = nil
                 end
 
+                for I, item in ipairs(self.Tags) do
+                    CollectionService:RemoveTag(self, item)
+                end
+
                 if RealSelf.Overides["Destroy"] then
                     RealSelf.Overides["Destroy"](self)
                 end
@@ -178,6 +183,14 @@ function module.new(SuperInject:() -> SuperInject)
 
         IsA = function(self, Type:string)
             return self.ClassName == Type
+        end;
+
+        AddTag = function(self, Tag:string)
+            CollectionService:AddTag(self, Tag)
+        end;
+
+        RemoveTag = function(self, Tag:string)
+            CollectionService:RemoveTag(self, Tag)
         end
     }
 

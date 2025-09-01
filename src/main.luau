@@ -1,12 +1,14 @@
 local Game = require("@packages/Game")
 
 local Task, Instance, Udim, Color4, TweenInfo, Enum = Game:GetCommonUtils()
+local CollectionService:CollectionService = Game:GetService("CollectionService")
 
 local LeftFrame:UI2D = Instance.new("Frame")
 LeftFrame.Size = Udim.FromScale(0.6, 0.6)
 LeftFrame.Position = Udim.FromScale(0.5, 0.5) 
 LeftFrame.AnchorPoint = Udim.FromScale(0.5, 0.5)
 LeftFrame.Color = Color4.FromHex("#ab6a4f")
+LeftFrame:AddTag("Test")
 
 local RightFrame:UI2D = Instance.new("Frame")
 RightFrame.Size = Udim.FromScale(0.6, 0.6)
@@ -14,6 +16,7 @@ RightFrame.Position = Udim.FromScale(0.5, 0.5)
 RightFrame.AnchorPoint = Udim.FromScale(0.5, 0.5)
 RightFrame.Color = Color4.FromHex("#4f6aab")
 RightFrame.Parent = LeftFrame
+RightFrame:AddTag("Test")
 
 local TweenService = require("@game/Services/TweenService")
 
@@ -31,3 +34,7 @@ Task.spawn(function()
 
     Tween:Play()
 end)
+
+for I, item in ipairs(CollectionService:GetTagged("Test")) do
+    print(item)
+end

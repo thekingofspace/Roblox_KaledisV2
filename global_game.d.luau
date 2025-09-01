@@ -12,7 +12,9 @@ export type Instance = {
     SetAttribute:(self:Instance, Attribute:string, Newvalue:any) ->  nil;
     GetAttributeChangedSignal:(self:Instance, Attribute:string) ->  ReadOnlySignal<any>;
     GetPropertyChangedSignal:(self:Instance, Property:string) ->  ReadOnlySignal<any>;
-    IsA:(self:UI2D, Type:string)  -> boolean
+    IsA:(self:Instance, Type:string)  -> boolean;
+    AddTag:(self:Instance,  Tag:string) ->  nil;
+    RemoveTag:(self:Instance,  Tag:string) ->  nil;
 }
 
 export type UI2D = Instance & {
@@ -166,4 +168,13 @@ export type DataStore = {
 export type DataStoreService = {
     GetDataStore: (self: DataStoreService, DataStore: string?) -> DataStore,
     ListDataStores: (self: DataStoreService) -> {string},
+}
+
+export type CollectionService = {
+	Tagged: { [string]: { [Instance?]: true } },
+
+	AddTag: (self: CollectionService, Instance: Instance?, Tag: string) -> (),
+	RemoveTag: (self: CollectionService, Instance: Instance?, Tag: string) -> (),
+	GetTagged: (self: CollectionService, Tag: string) -> { Instance? },
+	DropTag: (self: CollectionService, Tag: string) -> (),
 }
