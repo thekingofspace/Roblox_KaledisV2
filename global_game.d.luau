@@ -178,3 +178,8 @@ export type CollectionService = {
 	GetTagged: (self: CollectionService, Tag: string) -> { Instance? },
 	DropTag: (self: CollectionService, Tag: string) -> (),
 }
+
+export type LogService = {
+    Push: (self: LogService, message: string) -> (),
+    Clear: (self: LogService) -> ()
+}
