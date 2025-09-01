@@ -4,7 +4,7 @@
         {
             "label": "Build and Run Kaledis",
             "type": "shell",
-            "command": "${workspaceFolder}\\kaledis build && start ${workspaceFolder}\\.build\\final.love",
+            "command": "${workspaceFolder}\\kaledis build && cd /d ${workspaceFolder}\\.build && start final.love",
             "options": {
                 "shell": {
                     "executable": "cmd.exe",
