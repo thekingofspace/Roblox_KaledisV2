@@ -107,7 +107,7 @@ function module.new(SuperInject)
             self.Parent = nil
         end)
         
-        local SuperData = builder:BuildAray()
+        local SuperData = builder:BuildArray()
         
         if SuperInject then
             local NewData = SuperInject()

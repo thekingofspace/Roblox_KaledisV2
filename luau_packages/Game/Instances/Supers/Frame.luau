@@ -94,7 +94,7 @@ function module.new()
 
         FrameSuper:InjectProperty("ClassName", "Frame")
 
-        return FrameSuper:BuildAray()
+        return FrameSuper:BuildArray()
     end)
 end
 

@@ -44,7 +44,7 @@ function module.new()
         self.PrivateProperties[ID] = Value
     end
 
-    function self:BuildAray():SuperInject
+    function self:BuildArray():SuperInject
         return {
             Methods = self.Methods;
             Properties = self.Properties;

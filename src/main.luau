@@ -12,6 +12,7 @@ LeftFrame.AnchorPoint = Udim.FromScale(0.5, 0.5)
 LeftFrame.Color = Color4.FromHex("#ab6a4f")
 LeftFrame:AddTag("Test")
 LogService:Push("Created frame 1")
+LeftFrame.ZIndex = 1
 
 local RightFrame:UI2D = Instance.new("Frame")
 RightFrame.Size = Udim.FromScale(0.6, 0.6)
@@ -22,28 +23,34 @@ RightFrame.Parent = LeftFrame
 RightFrame:AddTag("Test")
 LogService:Push("Created frame 2")
 local TweenService = require("@game/Services/TweenService")
+RightFrame.ZIndex = 2
 
 
 Task.spawn(function()
-    LogService:Push("Started Loop")
-    local Tween = TweenService:Create(RightFrame, TweenInfo.New(2, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Color = Color4.Black(),  Rotation = 360})
+    while true do
+        LogService:Push("Started Loop")
+        local Tween = TweenService:Create(RightFrame, TweenInfo.New(5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Color = Color4.Black(),  Rotation = 360})
 
-    Tween:Play()
+        Tween:Play()
 
-    Tween.Completed:Wait()
+        Tween.Completed:Wait()
 
-    Task.wait(0.7)
+        Task.wait(1)
 
-    Tween = TweenService:Create(RightFrame, TweenInfo.New(5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Color = Color4.FromHex("#4f6aab"),  Rotation = 0})
+        Tween = TweenService:Create(RightFrame, TweenInfo.New(5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Color = Color4.FromHex("#4f6aab"),  Rotation = 0})
 
-    Tween:Play()
-    Tween.Completed:Wait()
+        Tween:Play()
+        Tween.Completed:Wait()
 
-    LogService:Push("Finished  Loop")
+        LogService:Push("Finished  Loop")
+
+        Task.wait(1)
+    end
 end)
 
 LogService:Push("Program Concluded.")
 
 local CenterFrame:Frame = RightFrame:Clone()
+CenterFrame.ZIndex = 3
 
 CenterFrame.Parent = RightFrame
