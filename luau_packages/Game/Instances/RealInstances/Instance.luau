@@ -93,8 +93,8 @@ function module.new(SuperInject:() -> SuperInject)
                     InstanceStorage.Logic[self.ID] = nil
                 end
 
-                for I, item in ipairs(self.Tags) do
-                    CollectionService:RemoveTag(self, item)
+                while #self.Tags ~= 0 do 
+                    CollectionService:RemoveTag(self, self.Tags[1])
                 end
 
                 if RealSelf.Overides["Destroy"] then
