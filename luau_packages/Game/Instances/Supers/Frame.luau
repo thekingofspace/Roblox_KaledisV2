@@ -1,7 +1,6 @@
 local UI = require("@game/Instances/RealInstances/UI")
 local Udim2 = require("@game/Types/Udim")
-
-local module = {}
+local SuperBuilder = require("@game/Vendors/SuperConstructor")
 
 local function CheckVisible(Instance:Frame)
     local target = Instance
@@ -16,95 +15,86 @@ local function CheckVisible(Instance:Frame)
     return true
 end
 
+local module = {}
+
 function module.new()
     return UI.new(function()
-        local Super = {}::SuperInject
+        local FrameSuper = SuperBuilder.new()
 
-        Super.Methods = {}
-
-        Super.Properties = {
-            { Name = "Name",      Value = "Frame" },
-            { Name = "ClassName", Value = "Frame" }
-        }
-
-        table.insert(Super.Methods, {
-            Name = "Draw";
-
-            Code = function(self:Frame, DT)
-                if CheckVisible(self) ~= true then
-                    return
-                end
-
-                local truePosX = self.Position.X.Scale - self.Size.X.Scale * self.AnchorPoint.X.Scale
-                local truePosY = self.Position.Y.Scale - self.Size.Y.Scale * self.AnchorPoint.Y.Scale
-
-                local Width, Height = self.Size:ToAbsolute()
-                local TrueRotation = self.Rotation
-
-                local Parent = self.Parent
-
-                while Parent ~= nil do
-                    TrueRotation += Parent.Rotation
-
-                    truePosX = truePosX * Parent.Size.X.Scale + Parent.Position.X.Scale - Parent.Size.X.Scale * Parent.AnchorPoint.X.Scale
-                    truePosY = truePosY * Parent.Size.Y.Scale + Parent.Position.Y.Scale - Parent.Size.Y.Scale * Parent.AnchorPoint.Y.Scale
-
-                    Width = Width * Parent.Size.X.Scale
-                    Height = Height * Parent.Size.Y.Scale
-
-                    Parent = Parent.Parent
-                end
-
-                local truePosition:UDim = Udim2.FromScale(truePosX, truePosY)
-                local X, Y = truePosition:ToAbsolute()
-
-                love.graphics.push()
-                love.graphics.setColor(self.Color:GetColor())
-
-                local centerX = X + Width * self.AnchorPoint.X.Scale
-                local centerY = Y + Height * self.AnchorPoint.Y.Scale
-
-                love.graphics.translate(centerX, centerY)
-                love.graphics.rotate(math.rad(TrueRotation))
-                love.graphics.translate(-centerX, -centerY)
-
-                love.graphics.rectangle("fill", X, Y, Width, Height)
-                love.graphics.pop()
+        FrameSuper:InjectMethod("Draw", function(self:Frame, DT:number)
+            if CheckVisible(self) ~= true then
+                return
             end
-        })
 
-        table.insert(Super.Methods,  {
-            Name = "GetAbsolute";
+            local truePosX = self.Position.X.Scale - self.Size.X.Scale * self.AnchorPoint.X.Scale
+            local truePosY = self.Position.Y.Scale - self.Size.Y.Scale * self.AnchorPoint.Y.Scale
 
-            Code = function(self)
-                local truePosX = self.Position.X.Scale - self.Size.X.Scale * self.AnchorPoint.X.Scale
-                local truePosY = self.Position.Y.Scale - self.Size.Y.Scale * self.AnchorPoint.Y.Scale
+            local Width, Height = self.Size:ToAbsolute()
+            local TrueRotation = self.Rotation
 
-                local Width, Height = self.Size:ToAbsolute()
-                local TrueRotation = self.Rotation
+            local Parent = self.Parent
 
-                local Parent = self.Parent
+            while Parent ~= nil do
+                TrueRotation += Parent.Rotation
 
-                while Parent ~= nil do
-                    TrueRotation += Parent.Rotation
+                truePosX = truePosX * Parent.Size.X.Scale + Parent.Position.X.Scale - Parent.Size.X.Scale * Parent.AnchorPoint.X.Scale
+                truePosY = truePosY * Parent.Size.Y.Scale + Parent.Position.Y.Scale - Parent.Size.Y.Scale * Parent.AnchorPoint.Y.Scale
 
-                    truePosX = truePosX * Parent.Size.X.Scale + Parent.Position.X.Scale - Parent.Size.X.Scale * Parent.AnchorPoint.X.Scale
-                    truePosY = truePosY * Parent.Size.Y.Scale + Parent.Position.Y.Scale - Parent.Size.Y.Scale * Parent.AnchorPoint.Y.Scale
+                Width = Width * Parent.Size.X.Scale
+                Height = Height * Parent.Size.Y.Scale
 
-                    Width = Width * Parent.Size.X.Scale
-                    Height = Height * Parent.Size.Y.Scale
-
-                    Parent = Parent.Parent
-                end
-
-                local truePosition:UDim = Udim2.FromScale(truePosX, truePosY)
-                local X, Y = truePosition:ToAbsolute()
-
-                return X, Y, Width, Height, math.rad(TrueRotation) 
+                Parent = Parent.Parent
             end
-        })
 
-        return Super
+            local truePosition:UDim = Udim2.FromScale(truePosX, truePosY)
+            local X, Y = truePosition:ToAbsolute()
+
+            love.graphics.push()
+            love.graphics.setColor(self.Color:GetColor())
+
+            local centerX = X + Width * self.AnchorPoint.X.Scale
+            local centerY = Y + Height * self.AnchorPoint.Y.Scale
+
+            love.graphics.translate(centerX, centerY)
+            love.graphics.rotate(math.rad(TrueRotation))
+            love.graphics.translate(-centerX, -centerY)
+
+            love.graphics.rectangle("fill", X, Y, Width, Height)
+            love.graphics.pop()
+        end)
+
+        FrameSuper:InjectMethod("GetAbsolute", function(self:Frame)
+            local truePosX = self.Position.X.Scale - self.Size.X.Scale * self.AnchorPoint.X.Scale
+            local truePosY = self.Position.Y.Scale - self.Size.Y.Scale * self.AnchorPoint.Y.Scale
+
+            local Width, Height = self.Size:ToAbsolute()
+            local TrueRotation = self.Rotation
+
+            local Parent = self.Parent
+
+            while Parent ~= nil do
+                TrueRotation += Parent.Rotation
+
+                truePosX = truePosX * Parent.Size.X.Scale + Parent.Position.X.Scale - Parent.Size.X.Scale * Parent.AnchorPoint.X.Scale
+                truePosY = truePosY * Parent.Size.Y.Scale + Parent.Position.Y.Scale - Parent.Size.Y.Scale * Parent.AnchorPoint.Y.Scale
+
+                Width = Width * Parent.Size.X.Scale
+                Height = Height * Parent.Size.Y.Scale
+
+                Parent = Parent.Parent
+            end
+
+            local truePosition:UDim = Udim2.FromScale(truePosX, truePosY)
+            local X, Y = truePosition:ToAbsolute()
+
+            return X, Y, Width, Height, math.rad(TrueRotation) 
+        end)
+
+        FrameSuper:InjectProperty("Name", "Frame")
+
+        FrameSuper:InjectProperty("ClassName", "Frame")
+
+        return FrameSuper:BuildAray()
     end)
 end
 

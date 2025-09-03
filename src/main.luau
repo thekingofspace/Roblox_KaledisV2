@@ -43,3 +43,7 @@ Task.spawn(function()
 end)
 
 LogService:Push("Program Concluded.")
+
+local CenterFrame:Frame = RightFrame:Clone()
+
+CenterFrame.Parent = RightFrame

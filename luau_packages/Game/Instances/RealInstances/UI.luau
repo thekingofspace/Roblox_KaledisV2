@@ -2,149 +2,130 @@ local InstanceBase = require("@game/Instances/RealInstances/Instance")
 local UDIM2 = require("@game/Types/Udim")
 local Color4 = require("@game/Types/Color4")
 local Signals = require("@game/Vendors/signal")
+local Builder = require("@game/Vendors/SuperConstructor")
 
 local module = {}
 
 function module.new(SuperInject)
     return InstanceBase.new(function()
-        local SuperData = {} :: SuperInject
-
-        SuperData.PrivateProperties = {
-            TouchBegan_Private = Signals.CreateSignal(),
-            TouchEnded_Private = Signals.CreateSignal(),
-            MouseClick_Private = Signals.CreateSignal(),
-            MouseRelease_Private = Signals.CreateSignal(),
-            MouseHoverBegin_Private = Signals.CreateSignal(),
-            MouseHoverRelease_Private = Signals.CreateSignal(),
-            Children = {}
-        }
-
+        local builder = Builder.new()
+        
+        builder:InjectPrivate("TouchBegan_Private", Signals.CreateSignal())
+        builder:InjectPrivate("TouchEnded_Private", Signals.CreateSignal())
+        builder:InjectPrivate("MouseClick_Private", Signals.CreateSignal())
+        builder:InjectPrivate("MouseRelease_Private", Signals.CreateSignal())
+        builder:InjectPrivate("MouseHoverBegin_Private", Signals.CreateSignal())
+        builder:InjectPrivate("MouseHoverRelease_Private", Signals.CreateSignal())
+        builder:InjectPrivate("Children", {})
+        
         local function asSignal(privateSignal)
             return Signals.CreateReadOnlySignal(privateSignal)
         end
-
-        SuperData.Properties = {
-            { Name = "Position",     Value = UDIM2.Zero(),  Type = "udim" },
-            { Name = "Size",         Value = UDIM2.Zero(),  Type = "udim" },
-            { Name = "Rotation",     Value = 0,             Type = "number" },
-            { Name = "ZIndex",       Value = 0,             Type = "number" },
-            { Name = "Visible",      Value = true,          Type = "boolean" },
-            { Name = "AnchorPoint",  Value = UDIM2.Zero(),  Type = "udim" },
-            { Name = "Color",        Value = Color4.White(),Type = "color4" },
-            {Name  = "CanQuery", Value = true, Type = "boolean"},
-            {Name  = "SinkInputs", Value = true, Type = "boolean"},
-
-            {
-                Name = "Parent",
-                Value = "nil",
-                Type = { "instance", "nil" },
-
-                ReadTransform = function(_, value)
-                    if value == "nil" then
-                        return nil
-                    else
-                        return value
-                    end
-                end,
-
-                WriteTransform = function(self, oldValue, newValue)
-                    if oldValue ~= "nil" and not oldValue.Destroyed then
-                        for i, item in ipairs(oldValue.Children) do
-                            if item == self then
-                                table.remove(oldValue.Children, i)
-                                break
-                            end
+        
+        builder:InjectProperty("Position", UDIM2.Zero(), "udim")
+        builder:InjectProperty("Size", UDIM2.Zero(), "udim")
+        builder:InjectProperty("Rotation", 0, "number")
+        builder:InjectProperty("ZIndex", 0, "number")
+        builder:InjectProperty("Visible", true, "boolean")
+        builder:InjectProperty("AnchorPoint", UDIM2.Zero(), "udim")
+        builder:InjectProperty("Color", Color4.White(), "color4")
+        builder:InjectProperty("CanQuery", true, "boolean")
+        builder:InjectProperty("SinkInputs", true, "boolean")
+        builder:InjectProperty("Name", "2D_UI")
+        builder:InjectProperty("ClassName", "2D_UI")
+        
+        builder:InjectProperty("Parent", "nil", {"instance", "nil"}, 
+            function(_, value)
+                if value == "nil" then
+                    return nil
+                else
+                    return value
+                end
+            end,
+            function(self, oldValue, newValue)
+                if oldValue ~= "nil" and not oldValue.Destroyed then
+                    for i, item in ipairs(oldValue.Children) do
+                        if item == self then
+                            table.remove(oldValue.Children, i)
+                            break
                         end
                     end
-
-                    if newValue == nil then
-                        return "nil"
-                    end
-
-                    table.insert(newValue.Children, self)
-                    return newValue
                 end
-            },
-
-            { Name = "Name",      Value = "2D_UI" },
-            { Name = "ClassName", Value = "2D_UI" },
-
-            { Name = "TouchBegan",       Type = "frozen", Value = asSignal(SuperData.PrivateProperties.TouchBegan_Private) },
-            { Name = "TouchEnded",       Type = "frozen", Value = asSignal(SuperData.PrivateProperties.TouchEnded_Private) },
-            { Name = "MouseClick",       Type = "frozen", Value = asSignal(SuperData.PrivateProperties.MouseClick_Private) },
-            { Name = "MouseRelease",     Type = "frozen", Value = asSignal(SuperData.PrivateProperties.MouseRelease_Private) },
-            { Name = "MouseHoverBegin",  Type = "frozen", Value = asSignal(SuperData.PrivateProperties.MouseHoverBegin_Private) },
-            { Name = "MouseHoverRelease",Type = "frozen", Value = asSignal(SuperData.PrivateProperties.MouseHoverRelease_Private) },
-        }
-
-        SuperData.Methods = {
-            {
-                Name = "IsDescendantOf",
-                Code = function(self, target)
-                    if typeof(target) ~= "table" or target.Type ~= "instance" then
-                        return false
-                    end
-
-                    local ancestor = self
-                    while ancestor do
-                        if ancestor == target then
-                            return true
-                        end
-                        ancestor = ancestor.Parent
-                    end
-                    return false
+                if newValue == nil then
+                    return "nil"
                 end
-            },
+                table.insert(newValue.Children, self)
+                return newValue
+            end
+        )
+        
+        local privateProps = builder.PrivateProperties
+        builder:InjectProperty("TouchBegan", asSignal(privateProps.TouchBegan_Private), "frozen")
+        builder:InjectProperty("TouchEnded", asSignal(privateProps.TouchEnded_Private), "frozen")
+        builder:InjectProperty("MouseClick", asSignal(privateProps.MouseClick_Private), "frozen")
+        builder:InjectProperty("MouseRelease", asSignal(privateProps.MouseRelease_Private), "frozen")
+        builder:InjectProperty("MouseHoverBegin", asSignal(privateProps.MouseHoverBegin_Private), "frozen")
+        builder:InjectProperty("MouseHoverRelease", asSignal(privateProps.MouseHoverRelease_Private), "frozen")
+        
 
-            {
-                Name = "GetChildren",
-                Code = function(self)
-                    return self.Children
+        builder:InjectMethod("IsDescendantOf", function(self, target)
+            if typeof(target) ~= "table" or target.Type ~= "instance" then
+                return false
+            end
+            local ancestor = self
+            while ancestor do
+                if ancestor == target then
+                    return true
                 end
-            },
-
-            {
-                Name = "GetDescendants",
-                Code = function(self)
-                    local descendants = {}
-
-                    local function recurse(children)
-                        for _, child in ipairs(children) do
-                            table.insert(descendants, child)
-                            if #child.Children > 0 then
-                                recurse(child.Children)
-                            end
-                        end
+                ancestor = ancestor.Parent
+            end
+            return false
+        end)
+        
+        builder:InjectMethod("GetChildren", function(self)
+            return self.Children
+        end)
+        
+        builder:InjectMethod("GetDescendants", function(self)
+            local descendants = {}
+            local function recurse(children)
+                for _, child in ipairs(children) do
+                    table.insert(descendants, child)
+                    if #child.Children > 0 then
+                        recurse(child.Children)
                     end
-
-                    recurse(self.Children)
-                    return descendants
                 end
-            }
-        }
-
-
-        SuperData.Extensions = {
-            {
-                Name = "Destroy",
-                Code = function(self)
-                    for _, child in ipairs(self.Children) do
-                        child.Parent = nil
-                    end
-                    self.Parent = nil
-                end
-            }
-        }
-
+            end
+            recurse(self.Children)
+            return descendants
+        end)
+        
+        builder:InjectExtension("Destroy", function(self)
+            for _, child in ipairs(self.Children) do
+                child.Parent = nil
+            end
+            self.Parent = nil
+        end)
+        
+        local SuperData = builder:BuildAray()
+        
         if SuperInject then
-            local NewData:SuperInject = SuperInject()
+            local NewData = SuperInject()
             for key, items in pairs(NewData) do
+                if  key == "PrivateProperties" then
+                    for E, value in pairs(items) do
+                        SuperData[key][E] = value
+                    end
+
+                    continue
+                end
+
                 for _, value in ipairs(items) do
                     table.insert(SuperData[key], value)
                 end
             end
         end
-
+        
         return SuperData
     end)
 end

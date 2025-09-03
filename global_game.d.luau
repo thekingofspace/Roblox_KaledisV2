@@ -79,7 +79,7 @@ export type PropertyInject = {
 
 export type MethodInject = {
     Name:string;
-    Code:(self:any) -> nil
+    Code:(self:any, ...any) -> nil
 }
 
 export type SuperInject = {
