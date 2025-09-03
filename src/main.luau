@@ -50,7 +50,8 @@ end)
 
 LogService:Push("Program Concluded.")
 
-local CenterFrame:Frame = RightFrame:Clone()
+local CenterFrame = RightFrame:Clone()
 CenterFrame.ZIndex = 3
+CenterFrame:RemoveTag("Test")
 
 CenterFrame.Parent = RightFrame
