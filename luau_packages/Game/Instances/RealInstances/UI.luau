@@ -105,6 +105,13 @@ function module.new(SuperInject)
                 child.Parent = nil
             end
             self.Parent = nil
+
+            privateProps.TouchBegan_Private:Destroy()
+            privateProps.TouchEnded_Private:Destroy()
+            privateProps.MouseClick_Private:Destroy()
+            privateProps.MouseRelease_Private:Destroy()
+            privateProps.MouseHoverBegin_Private:Destroy()
+            privateProps.MouseHoverRelease_Private:Destroy()
         end)
         
         local SuperData = builder:BuildArray()

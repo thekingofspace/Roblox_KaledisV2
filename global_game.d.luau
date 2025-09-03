@@ -47,6 +47,12 @@ export type Frame = UI2D & {
     GetAbsolute: (self: Frame) -> (number, number, number, number, number)
 }
 
+export type BindableEvent = Instance & {
+    Event:ReadOnlySignal<...any>;
+    
+    Fire:(self:BindableEvent, ...any) -> nil
+}
+
 
 export type Connection = {
     Callback: (...any) -> (),

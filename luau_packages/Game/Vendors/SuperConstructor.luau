@@ -52,6 +52,10 @@ function module.new()
             Extensions = self.Extensions
         }
     end
+
+    function self:GetPrivate(ID:string)
+        return self.PrivateProperties[ID]
+    end
     
     self.__index = self
 
