@@ -1,57 +1,57 @@
-export type Instance = {
-    Name: string;
-    ClassName: string;
-    ID: number;
-    Type: string;
-    Destroyed: boolean;
+declare class Instance
+    Name: string
+    ClassName: string
+    ID: number
+    Type: string
+    Destroyed: boolean
 
-    Changed: ReadOnlySignal<string, any>,
-    
-    Destroy: (self: Instance) -> nil;
-    Clone: <T>(self: T) -> T;
-    GetAttribute: (self: Instance, Attribute: string) -> any;
-    SetAttribute: (self: Instance, Attribute: string, Newvalue: any) -> nil;
-    GetAttributeChangedSignal: (self: Instance, Attribute: string) -> ReadOnlySignal<any>;
-    GetPropertyChangedSignal: (self: Instance, Property: string) -> ReadOnlySignal<any>;
-    IsA: (self: Instance, Type: string) -> boolean;
-    AddTag: (self: Instance, Tag: string) -> nil;
-    RemoveTag: (self: Instance, Tag: string) -> nil;
-}
+    Changed: ReadOnlySignal<string, any>
 
-export type UI2D = Instance & {
-    Position: UDim;
-    Size: UDim;
-    AnchorPoint: UDim;
-    Color: Color4;
-    Rotation: number;
-    Visible: boolean;
-    ZIndex: number;
-    Parent: UI2D | nil;
-    CanQuery: boolean;
-    SinkInputs: boolean;
+    Destroy: (self: Instance) -> ()
+    Clone: <T>(self: T) -> T
+    GetAttribute: (self: Instance, Attribute: string) -> any
+    SetAttribute: (self: Instance, Attribute: string, Newvalue: any) -> ()
+    GetAttributeChangedSignal: (self: Instance, Attribute: string) -> ReadOnlySignal<any>
+    GetPropertyChangedSignal: (self: Instance, Property: string) -> ReadOnlySignal<any>
+    IsA: (self: Instance, Type: string) -> boolean
+    AddTag: (self: Instance, Tag: string) -> ()
+    RemoveTag: (self: Instance, Tag: string) -> ()
+end
 
-    TouchBegan: ReadOnlySignal<UI2D>;
-    TouchEnded: ReadOnlySignal<UI2D>;
-    MouseClick: ReadOnlySignal<>;
-    MouseRelease: ReadOnlySignal<>;
-    MouseHoverBegin: ReadOnlySignal<>;
-    MouseHoverRelease: ReadOnlySignal<>;
-    
-    GetPosition: (self: UI2D) -> (number, number);
-    IsDescendantOf: (self: UI2D, Target: UI2D) -> boolean;
-    GetChildren: (self: UI2D) -> {UI2D};
-    GetDescendants: (self: UI2D) -> {UI2D};
-}
+declare class UI2D extends Instance
+    Position: UDim
+    Size: UDim
+    AnchorPoint: UDim
+    Color: Color4
+    Rotation: number
+    Visible: boolean
+    ZIndex: number
+    Parent: UI2D?
+    CanQuery: boolean
+    SinkInputs: boolean
 
-export type Frame = UI2D & {
+    TouchBegan: ReadOnlySignal<UI2D>
+    TouchEnded: ReadOnlySignal<UI2D>
+    MouseClick: ReadOnlySignal<>
+    MouseRelease: ReadOnlySignal<>
+    MouseHoverBegin: ReadOnlySignal<>
+    MouseHoverRelease: ReadOnlySignal<>
+
+    GetPosition: (self: UI2D) -> (number, number)
+    IsDescendantOf: (self: UI2D, Target: UI2D) -> boolean
+    GetChildren: (self: UI2D) -> {UI2D}
+    GetDescendants: (self: UI2D) -> {UI2D}
+end
+
+declare class Frame extends UI2D
     GetAbsolute: (self: Frame) -> (number, number, number, number, number)
-}
+end
 
-export type BindableEvent = Instance & {
-    Event:ReadOnlySignal<...any>;
-    
-    Fire:(self:BindableEvent, ...any) -> nil
-}
+declare class BindableEvent extends Instance
+    Event: ReadOnlySignal<any>
+
+    Fire: (self: BindableEvent, ...any) -> ()
+end
 
 
 export type Connection = {
