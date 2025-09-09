@@ -50,10 +50,10 @@ function module.new(SuperInject)
         builder:InjectMethod("Find", function(self, Predicate:(any) -> boolean)
             for i, v in ipairs(self.Sink) do
                 if Predicate(v) then
-                    return v, i
+                    return true
                 end
             end
-            return nil
+            return false
         end)
 
         return builder:BuildArray()

@@ -113,8 +113,15 @@ end)
 
 Task.delay(5, function()
     IsSinking = false
-    Sink:Process(function(Value)
-        print(Value)
-    end)
+    if Sink:Find(function(Key)
+        if Key == Enum.KeyInputs.w then
+            return true
+        end
+        return
+    end) == true then
+        Sink:Process(function(Value)
+            print(Value)
+        end)
+    end
     Sink:Pop()
 end)
