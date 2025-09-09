@@ -3,7 +3,7 @@ local UserInput = require("@game/Services/UserInputService")
 
 local PressedItems = {}
 
-return function(X, Y, Context:number, Action: "Input" | "Release" | "Move")
+return function(X, Y, Context, Action: "Input" | "Release" | "Move")
     local actions = {
         Input = function(item, IsUnder, WasPressed)
             if IsUnder and not PressedItems[item] then

@@ -89,7 +89,7 @@ function love.mousereleased(x:number, y:number, button)
 end
 
 function love.mousemoved(x, y, dx, dy)
-    ClickEvent(x, y, "Move")
+    ClickEvent(x, y, nil, "Move")
     SignalStorage.MouseMoved:Fire(x, y, dx, dy)
 end
 
