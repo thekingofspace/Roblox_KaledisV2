@@ -192,8 +192,8 @@ declare class UI2D extends Instance
 
     TouchBegan: ReadOnlySignal<UI2D>
     TouchEnded: ReadOnlySignal<UI2D>
-    MouseClick: ReadOnlySignal<>
-    MouseRelease: ReadOnlySignal<>
+    MouseClick: ReadOnlySignal<string>
+    MouseRelease: ReadOnlySignal<string?>
     MouseHoverBegin: ReadOnlySignal<>
     MouseHoverRelease: ReadOnlySignal<>
 

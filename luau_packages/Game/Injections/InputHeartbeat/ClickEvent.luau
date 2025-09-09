@@ -1,14 +1,15 @@
 local Instances = require("@game/InstanceStorage")
+local UserInput = require("@game/Services/UserInputService")
 
 local PressedItems = {}
 
-return function(X, Y, Action: "Input" | "Release" | "Move")
+return function(X, Y, Context:number, Action: "Input" | "Release" | "Move")
     local actions = {
         Input = function(item, IsUnder, WasPressed)
             if IsUnder and not PressedItems[item] then
                 PressedItems[item] = true
                 if item.MouseClick_Private then
-                    item.MouseClick_Private:Fire(X, Y)
+                    item.MouseClick_Private:Fire(UserInput:GetMouseCode(Context))
                 end
             end
         end,
@@ -17,7 +18,7 @@ return function(X, Y, Action: "Input" | "Release" | "Move")
             if WasPressed then
                 PressedItems[item] = nil
                 if item.MouseRelease_Private then
-                    item.MouseRelease_Private:Fire(X, Y)
+                    item.MouseRelease_Private:Fire(UserInput:GetMouseCode(Context))
                 end
             end
         end,
@@ -26,7 +27,7 @@ return function(X, Y, Action: "Input" | "Release" | "Move")
             if WasPressed and not IsUnder then
                 PressedItems[item] = nil
                 if item.MouseRelease_Private then
-                    item.MouseRelease_Private:Fire(X, Y)
+                    item.MouseRelease_Private:Fire()
                 end
             end
         end,

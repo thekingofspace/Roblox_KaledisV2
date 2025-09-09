@@ -79,12 +79,12 @@ function Game:GetService(Service: GetService.Services)
 end
 
 function love.mousepressed(x:number, y:number, button)
-    ClickEvent(x, y, "Input")
+    ClickEvent(x, y, button "Input")
     SignalStorage.MouseClick:Fire(x, y, button)
 end
 
 function love.mousereleased(x:number, y:number, button)
-    ClickEvent(x, y, "Release")
+    ClickEvent(x, y, button "Release")
     SignalStorage.MouseRelease:Fire(x, y, button)
 end
 
