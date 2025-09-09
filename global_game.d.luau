@@ -159,6 +159,13 @@ export type UserInputService = {
     IsKeyDown:(self:UserInputService, KeyCode:string) -> boolean;
 }
 
+export type EncodeTypes = "json" | "toml"
+
+export type EncodeService = {
+    Encode:(self:EncodeService, Type:EncodeTypes, Data:any, Pretty:boolean?) -> string;
+    Decode:(self:EncodeService, Type:EncodeTypes, Data:string) -> any
+}
+
 
 declare class Instance
     Name: string

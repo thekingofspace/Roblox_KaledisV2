@@ -1,4 +1,4 @@
-export  type Services = "RunService" | "TweenService" | "DataStore" | "CollectionService" | "LogService" | "UserInputService"
+export  type Services = "RunService" | "TweenService" | "DataStore" | "CollectionService" | "LogService" | "UserInputService" | "EncodeService"
 
 local Services = {
     RunService = require("@game/Services/RunService");
@@ -7,6 +7,7 @@ local Services = {
     CollectionService = require("@game/Services/CollectionService");
     LogService = require("@game/Services/LogService");
     UserInputService = require("@game/Services/UserInputService");
+    EncodeService = require("@game/Services/EncodeService");
 }
 
 return function(Service:Services)

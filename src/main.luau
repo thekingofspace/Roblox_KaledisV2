@@ -50,8 +50,6 @@ Task.spawn(function()
     end
 end)
 
-LogService:Push("Program Concluded.")
-
 local CenterFrame = RightFrame:Clone()
 CenterFrame.ZIndex = 3
 CenterFrame:RemoveTag("Test")
@@ -89,3 +87,6 @@ CenterFrame.TouchBegan:Connect(function(Instance)
         print("ran")
     end
 end)
+
+
+LogService:Push("Program Concluded.")
