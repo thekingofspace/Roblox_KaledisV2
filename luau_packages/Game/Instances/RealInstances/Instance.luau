@@ -225,12 +225,12 @@ function module.new(SuperInject:() -> SuperInject)
 
         if SuperData.Methods then
             for I, item in ipairs(SuperData.Methods) do
-                RealSelf.Methods[item.Name] = function()
+                RealSelf.Methods[item.Name] = function(self, ...)
                     if RealSelf.Overides[item.Name] then
-                        RealSelf.Overides[item.Name](self)
+                        RealSelf.Overides[item.Name](self, ...)
                     end
 
-                    return item.Code(self)
+                    return item.Code(self, ...)
                 end
             end
         end

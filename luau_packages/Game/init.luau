@@ -6,6 +6,13 @@ local Signal = require("@self/Vendors/signal")
 SignalStorage.HeartBeat = Signal.CreateSignal()
 SignalStorage.RenderStep = Signal.CreateSignal()
 
+SignalStorage.MouseClick = Signal.CreateSignal()
+SignalStorage.MouseRelease = Signal.CreateSignal()
+SignalStorage.MouseMoved = Signal.CreateSignal()
+
+SignalStorage.KeyDown = Signal.CreateSignal()
+SignalStorage.KeyRelease = Signal.CreateSignal()
+
 local Instance = require("@self/KeyWords/Instance")
 local Task = require("@self/KeyWords/Task")
 local TweenInfo = require("@self/KeyWords/TweenInfo")
@@ -15,13 +22,14 @@ local UDIM = require("@self/Types/Udim")
 local Color4 = require("@self/Types/Color4")
 
 local GetService = require("@self/ServiceGetter")
+local ClickEvent = require("@self/Injections./InputHeartbeat/ClickEvent")
 
 local Injects = {
     ["Draw"] = {
         require("@self/Injections/DrawInjects/Draw"),
         require("@self/Injections/DrawInjects/Check"),
     },
-    ["Update"] = {}
+    ["Update"] = {};
 }
 
 local lastTime = love.timer.getTime()
@@ -68,6 +76,30 @@ end
 
 function Game:GetService(Service: GetService.Services)
     return GetService(Service)
+end
+
+function love.mousepressed(x:number, y:number, button)
+    ClickEvent(x, y, "Input")
+    SignalStorage.MouseClick:Fire(x, y, button)
+end
+
+function love.mousereleased(x:number, y:number, button)
+    ClickEvent(x, y, "Release")
+    SignalStorage.MouseRelease:Fire(x, y, button)
+end
+
+function love.mousemoved(x, y, dx, dy)
+    ClickEvent(x, y, "Move")
+    SignalStorage.MouseMoved:Fire(x, y, dx, dy)
+end
+
+
+function love.keypressed(key)
+    SignalStorage.KeyDown:Fire(key)
+end
+
+function love.keyreleased(key)
+    SignalStorage.KeyRelease:Fire(key)
 end
 
 return Game

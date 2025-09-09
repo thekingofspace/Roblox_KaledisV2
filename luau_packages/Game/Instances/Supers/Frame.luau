@@ -63,33 +63,6 @@ function module.new()
             love.graphics.pop()
         end)
 
-        FrameSuper:InjectMethod("GetAbsolute", function(self:Frame)
-            local truePosX = self.Position.X.Scale - self.Size.X.Scale * self.AnchorPoint.X.Scale
-            local truePosY = self.Position.Y.Scale - self.Size.Y.Scale * self.AnchorPoint.Y.Scale
-
-            local Width, Height = self.Size:ToAbsolute()
-            local TrueRotation = self.Rotation
-
-            local Parent = self.Parent
-
-            while Parent ~= nil do
-                TrueRotation += Parent.Rotation
-
-                truePosX = truePosX * Parent.Size.X.Scale + Parent.Position.X.Scale - Parent.Size.X.Scale * Parent.AnchorPoint.X.Scale
-                truePosY = truePosY * Parent.Size.Y.Scale + Parent.Position.Y.Scale - Parent.Size.Y.Scale * Parent.AnchorPoint.Y.Scale
-
-                Width = Width * Parent.Size.X.Scale
-                Height = Height * Parent.Size.Y.Scale
-
-                Parent = Parent.Parent
-            end
-
-            local truePosition:UDim = Udim2.FromScale(truePosX, truePosY)
-            local X, Y = truePosition:ToAbsolute()
-
-            return X, Y, Width, Height, math.rad(TrueRotation) 
-        end)
-
         FrameSuper:InjectProperty("Name", "Frame")
 
         FrameSuper:InjectProperty("ClassName", "Frame")

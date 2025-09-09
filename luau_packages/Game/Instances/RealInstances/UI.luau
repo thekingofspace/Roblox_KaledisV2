@@ -113,6 +113,49 @@ function module.new(SuperInject)
             privateProps.MouseHoverBegin_Private:Destroy()
             privateProps.MouseHoverRelease_Private:Destroy()
         end)
+
+        builder:InjectMethod("GetAbsolute", function(self:UI2D)
+            local truePosX = self.Position.X.Scale - self.Size.X.Scale * self.AnchorPoint.X.Scale
+            local truePosY = self.Position.Y.Scale - self.Size.Y.Scale * self.AnchorPoint.Y.Scale
+
+            local Width, Height = self.Size:ToAbsolute()
+            local TrueRotation = self.Rotation
+
+            local Parent = self.Parent
+
+            while Parent ~= nil do
+                TrueRotation += Parent.Rotation
+
+                truePosX = truePosX * Parent.Size.X.Scale + Parent.Position.X.Scale - Parent.Size.X.Scale * Parent.AnchorPoint.X.Scale
+                truePosY = truePosY * Parent.Size.Y.Scale + Parent.Position.Y.Scale - Parent.Size.Y.Scale * Parent.AnchorPoint.Y.Scale
+
+                Width = Width * Parent.Size.X.Scale
+                Height = Height * Parent.Size.Y.Scale
+
+                Parent = Parent.Parent
+            end
+
+            local truePosition:UDim = UDIM2.FromScale(truePosX, truePosY)
+            local X, Y = truePosition:ToAbsolute()
+
+            return X, Y, Width, Height, math.rad(TrueRotation) 
+        end)
+
+        builder:InjectMethod("IsWithin", function(self, X:number, Y:number, Z):boolean
+            local absX, absY, width, height, rotation = self:GetAbsolute()
+
+            local centerX = absX + width / 2
+            local centerY = absY + height / 2
+            local dx = X - centerX
+            local dy = Y - centerY
+
+            local cosR = math.cos(-rotation)
+            local sinR = math.sin(-rotation)
+            local localX = dx * cosR - dy * sinR
+            local localY = dx * sinR + dy * cosR
+
+            return math.abs(localX) <= width / 2 and math.abs(localY) <= height / 2
+        end)
         
         local SuperData = builder:BuildArray()
         

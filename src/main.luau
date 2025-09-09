@@ -2,6 +2,8 @@ local Game = require("@packages/Game")
 
 local Task, Instance, Udim, Color4, TweenInfo, Enum = Game:GetCommonUtils()
 local LogService:LogService = Game:GetService("LogService")
+local UInput:UserInputService = Game:GetService("UserInputService")
+local Mouse = UInput:GetMouse()
 LogService:Clear()
 LogService:Push("Program began running")
 
@@ -55,3 +57,7 @@ CenterFrame.ZIndex = 3
 CenterFrame:RemoveTag("Test")
 
 CenterFrame.Parent = RightFrame
+
+Mouse.Moved:Connect(function(X,Y, DX, DY)
+    
+end)

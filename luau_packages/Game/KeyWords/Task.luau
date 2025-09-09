@@ -5,7 +5,6 @@ local Heartbeat: Signal = SignalStorage.HeartBeat
 local Task = {}
 Task.__index = Task
 
--- Internal queues
 local Queue = {}
 local DelayQueue = {}
 

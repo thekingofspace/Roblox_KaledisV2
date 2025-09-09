@@ -1,59 +1,3 @@
-declare class Instance
-    Name: string
-    ClassName: string
-    ID: number
-    Type: string
-    Destroyed: boolean
-
-    Changed: ReadOnlySignal<string, any>
-
-    Destroy: (self: Instance) -> ()
-    Clone: <T>(self: T) -> T
-    GetAttribute: (self: Instance, Attribute: string) -> any
-    SetAttribute: (self: Instance, Attribute: string, Newvalue: any) -> ()
-    GetAttributeChangedSignal: (self: Instance, Attribute: string) -> ReadOnlySignal<any>
-    GetPropertyChangedSignal: (self: Instance, Property: string) -> ReadOnlySignal<any>
-    IsA: (self: Instance, Type: string) -> boolean
-    AddTag: (self: Instance, Tag: string) -> ()
-    RemoveTag: (self: Instance, Tag: string) -> ()
-end
-
-declare class UI2D extends Instance
-    Position: UDim
-    Size: UDim
-    AnchorPoint: UDim
-    Color: Color4
-    Rotation: number
-    Visible: boolean
-    ZIndex: number
-    Parent: UI2D?
-    CanQuery: boolean
-    SinkInputs: boolean
-
-    TouchBegan: ReadOnlySignal<UI2D>
-    TouchEnded: ReadOnlySignal<UI2D>
-    MouseClick: ReadOnlySignal<>
-    MouseRelease: ReadOnlySignal<>
-    MouseHoverBegin: ReadOnlySignal<>
-    MouseHoverRelease: ReadOnlySignal<>
-
-    GetPosition: (self: UI2D) -> (number, number)
-    IsDescendantOf: (self: UI2D, Target: UI2D) -> boolean
-    GetChildren: (self: UI2D) -> {UI2D}
-    GetDescendants: (self: UI2D) -> {UI2D}
-end
-
-declare class Frame extends UI2D
-    GetAbsolute: (self: Frame) -> (number, number, number, number, number)
-end
-
-declare class BindableEvent extends Instance
-    Event: ReadOnlySignal<any>
-
-    Fire: (self: BindableEvent, ...any) -> ()
-end
-
-
 export type Connection = {
     Callback: (...any) -> (),
     IsConnected: boolean,
@@ -65,7 +9,8 @@ export type Signal = {
     ConnectAsync: (self: Signal, Callback: (...any) -> ()) -> Connection,
     Wait: (self: Signal, timeout: number?) -> ...any,
     Fire: (self: Signal, ...any) -> (),
-    Destroy: (self:Signal) -> nil
+    Destroy: (self:Signal) -> nil,
+    AddConstructor: (self:Signal ,Callback: (...any) -> ...any) -> nil
 }
 
 export type ReadOnlySignal<T...> = {
@@ -189,3 +134,83 @@ export type LogService = {
     Push: (self: LogService, message: string) -> (),
     Clear: (self: LogService) -> ()
 }
+
+export type Mouse = {
+    X:number;
+    Y:number;
+    Visible:boolean;
+    Cursor:string;
+
+    Clicked: ReadOnlySignal<number, number, string>;
+    Release: ReadOnlySignal<number, number, string>;
+    Moved: ReadOnlySignal<number, number, number, number>;
+
+    SetCursor:(self:Mouse) -> nil
+}
+
+export type UserInputService = {
+    KeyDown: ReadOnlySignal <string>;
+    KeyRelease: ReadOnlySignal <string>;
+
+    GetMouse:(self:UserInputService) -> Mouse;
+    GetScanCode:(self:UserInputService, KeyCode:string) -> string;
+    GetKeyCode:(self:UserInputService, ScanCode:string) -> string;
+}
+
+
+declare class Instance
+    Name: string
+    ClassName: string
+    ID: number
+    Type: string
+    Destroyed: boolean
+
+    Changed: ReadOnlySignal<string, any>
+
+    Destroy: (self: Instance) -> ()
+    Clone: <T>(self: T) -> T
+    GetAttribute: (self: Instance, Attribute: string) -> any
+    SetAttribute: (self: Instance, Attribute: string, Newvalue: any) -> ()
+    GetAttributeChangedSignal: (self: Instance, Attribute: string) -> ReadOnlySignal<any>
+    GetPropertyChangedSignal: (self: Instance, Property: string) -> ReadOnlySignal<any>
+    IsA: (self: Instance, Type: string) -> boolean
+    AddTag: (self: Instance, Tag: string) -> ()
+    RemoveTag: (self: Instance, Tag: string) -> ()
+end
+
+declare class UI2D extends Instance
+    Position: UDim
+    Size: UDim
+    AnchorPoint: UDim
+    Color: Color4
+    Rotation: number
+    Visible: boolean
+    ZIndex: number
+    Parent: UI2D?
+    CanQuery: boolean
+    SinkInputs: boolean
+
+    TouchBegan: ReadOnlySignal<UI2D>
+    TouchEnded: ReadOnlySignal<UI2D>
+    MouseClick: ReadOnlySignal<>
+    MouseRelease: ReadOnlySignal<>
+    MouseHoverBegin: ReadOnlySignal<>
+    MouseHoverRelease: ReadOnlySignal<>
+
+    GetPosition: (self: UI2D) -> (number, number)
+    IsDescendantOf: (self: UI2D, Target: UI2D) -> boolean
+    GetChildren: (self: UI2D) -> {UI2D}
+    GetDescendants: (self: UI2D) -> {UI2D}
+    GetAbsolute: (self: UI2D) -> (number, number, number, number, number)
+    IsWithin: (self: UI2D, X:number, Y:number) -> (boolean)
+end
+
+declare class Frame extends UI2D
+
+end
+
+declare class BindableEvent extends Instance
+    Event: ReadOnlySignal<any>
+
+    Fire: (self: BindableEvent, ...any) -> ()
+end
