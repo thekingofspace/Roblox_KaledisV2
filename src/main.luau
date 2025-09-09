@@ -100,17 +100,8 @@ LogService:Push("Program Concluded.")
 
 local G4d = require("@packages/g4d")
 
-local Cube = G4d.newModel("assets/baseparts/cube.obj", "assets/textures/base.jpg", {20,0,0})
+local Cube = G4d.newModel("assets/baseparts/cube.obj", "assets/textures/base.jpg", {3,0,0})
 
-
-local lightingShader = love.graphics.newShader("assets/shaders/g3d.vert", "assets/shaders/lighting.frag")
-
-local lightX, lightY, lightZ = 5, -20, 2
-
-local brightness = 2
-local shininess = 5
-local specularStrength = 0.8
-local solidness = 1.0  
 
 local RotY = 0
 Cube:setRotation(0, 40, 0)
@@ -124,22 +115,5 @@ Task.spawn(function()
 end)
 
 RunService.RenderStep:Connect(function()
-    love.graphics.setBlendMode("alpha", "alphamultiply")
-    
-    if love.graphics.setDepthMode then
-        love.graphics.setDepthMode("less", true)
-    end
-    
-    lightingShader:send("lightPosition", {lightX, lightY, lightZ})
-    lightingShader:send("brightness", brightness)
-    lightingShader:send("shininess", shininess)
-    lightingShader:send("specularStrength", specularStrength)
-    lightingShader:send("solidness", solidness)
-    
-    Cube:draw(lightingShader)
-    
-    love.graphics.setBlendMode("alpha")
-    if love.graphics.setDepthMode then
-        love.graphics.setDepthMode()
-    end
+    Cube:draw()
 end)
