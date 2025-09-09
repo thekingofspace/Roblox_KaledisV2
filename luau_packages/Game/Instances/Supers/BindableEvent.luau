@@ -7,6 +7,10 @@ local module = {}
 function module.new(SuperInject)
     return InstanceBase.new(function()
         local builder = Builder.new()
+        
+        builder:InjectProperty("Name", "BindableEvent")
+
+        builder:InjectProperty("ClassName", "BindableEvent")
 
         builder:InjectPrivate("Event_Private", Signal.CreateSignal())
 

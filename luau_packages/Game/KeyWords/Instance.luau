@@ -1,10 +1,11 @@
 local module =  {}
 
-type Instances = "Frame" | "BindableEvent"
+type Instances = "Frame" | "BindableEvent" | "Sink"
 
 local Instances = {
     ["Frame"] = require("@game/Instances/Supers/Frame");
-    ["BindableEvent"] = require("@game/Instances/Supers/BindableEvent")
+    ["BindableEvent"] = require("@game/Instances/Supers/BindableEvent");
+    ["Sink"] = require("@game/Instances/Supers/Sink")
 }
 
 function module.new(Instance:Instances)

@@ -100,3 +100,21 @@ Mouse.Scrolled:Connect(function(X, Y)
 end)
 
 Game.Workspace.Color = Color4.FromHex("#41ff41")
+
+local Sink:Sink = Instance.new("Sink")
+
+local IsSinking = true
+
+UInput.InputBegan:Connect(function(Key:string)
+    if IsSinking == true then
+        Sink:Push(Key)
+    end
+end)
+
+Task.delay(5, function()
+    IsSinking = false
+    Sink:Process(function(Value)
+        print(Value)
+    end)
+    Sink:Pop()
+end)

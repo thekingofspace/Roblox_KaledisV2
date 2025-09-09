@@ -222,3 +222,13 @@ declare class BindableEvent extends Instance
 
     Fire: (self: BindableEvent, ...any) -> ()
 end
+
+declare class Sink extends Instance
+    StackSize:number
+
+    Push:(self:Sink, Value:any) -> (nil)
+    Pop:(self:Sink, Index:number?) -> (nil)
+    Peek:(self:Sink) -> (any)
+    Process:(self:Sink, Callback:(any) -> nil) -> (nil)
+    Find:(self:Sink, Predicate:(any) -> boolean) -> (boolean)
+end
