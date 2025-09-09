@@ -18,7 +18,6 @@ vec4 position(mat4 transformProjection, vec4 vertexPosition) {
 
     vertexNormal = VertexNormal;
     vertexColor = VertexColor;
-
     if (isCanvasEnabled) {
         screenPosition.y *= -1.0;
     }

@@ -61,6 +61,7 @@ function model:makeNormals(isFlipped)
     self.mesh:setTexture(self.texture)
 end
 
+
 function model:setTransform(translation, rotation, scale)
     self.translation = translation or self.translation
     self.rotation = rotation or self.rotation

@@ -3,7 +3,6 @@ local Game = require("@packages/Game")
 local Task, Instance, Udim, Color4, TweenInfo, Enum = Game:GetCommonUtils()
 local LogService:LogService = Game:GetService("LogService")
 local UInput:UserInputService = Game:GetService("UserInputService")
-local RunService:RunService = Game:GetService("RunService")
 local Mouse = UInput:GetMouse()
 LogService:Clear()
 LogService:Push("Program began running")
@@ -28,6 +27,8 @@ RightFrame:AddTag("Test")
 LogService:Push("Created frame 2")
 local TweenService = require("@game/Services/TweenService")
 RightFrame.ZIndex = 2
+
+Game.Workspace.Color = Color4.FromHex("#41ff41")
 
 Task.spawn(function()
     while true do
@@ -73,7 +74,7 @@ TestFrame.Size = Udim.FromScale(0.2, 0.2)
 TestFrame.AnchorPoint = Udim.FromScale(0.5, 0.5)
 
 TestFrame.Position = Udim.FromScale(0.9, 0.5)
-TestFrame.Parent = Game.Workspace
+TestFrame.Parent = nil
 
 CenterFrame.TouchBegan:Connect(function(Instance)
     if Instance == TestFrame then
@@ -88,45 +89,14 @@ end)
 
 LogService:Push("Program Concluded.")
 
-local G4d = require("@packages/g4d")
-
-local Cube = G4d.newModel("assets/baseparts/cube.obj", "assets/textures/base.jpg", {3,0,0}, nil , {1,1,1})
-
-
-local RotY = 0
-Cube:setRotation(0, 40, 0)
-
-Task.spawn(function()
-    while true do
-        Task.wait(0.05)
-        RotY+=0.05
-        Cube:setRotation(0, 40, RotY)
-    end
-end)
-
-RunService.RenderStep:Connect(function()
-    Cube:draw()
-end)
-
-local Size = {1,1,1}
-
 Mouse.Scrolled:Connect(function(X, Y)
     if UInput:IsKeyDown(Enum.KeyInputs.leftshift) then
         if Y > 0 then
             CenterFrame.Size += Udim.FromScale(0.05, 0.05)
-            Size[1]+=0.05
-            Size[2]+=0.05
-            Size[3]+=0.05
-
-            Cube:setScale(unpack(Size))
         else
             CenterFrame.Size -= Udim.FromScale(0.05, 0.05)
-
-            Size[1]-=0.05
-            Size[2]-=0.05
-            Size[3]-=0.05
-
-            Cube:setScale(unpack(Size))
         end
     end
 end)
+
+Game.Workspace.Color = Color4.FromHex("#41ff41")

@@ -22,7 +22,7 @@ local function IsFullyVisible(frame:UI2D)
     local Ancestor = frame
 
     while true do
-        if Ancestor.Parent and Ancestor.Parent.Name == "Workspace" then
+        if (Ancestor.Parent and Ancestor.Parent.Name == "Workspace") or Ancestor.Name == "Workspace" then
             break
         end
 
@@ -32,7 +32,7 @@ local function IsFullyVisible(frame:UI2D)
 
         Ancestor = Ancestor.Parent
     end
-    
+
     return true
 end
 
