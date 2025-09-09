@@ -57,16 +57,6 @@ CenterFrame:RemoveTag("Test")
 
 CenterFrame.Parent = RightFrame
 
-Mouse.Scrolled:Connect(function(X, Y)
-    if UInput:IsKeyDown(Enum.KeyInputs.leftshift) then
-        if Y > 0 then
-            CenterFrame.Size += Udim.FromScale(0.05, 0.05)
-        else
-            CenterFrame.Size -= Udim.FromScale(0.05, 0.05)
-        end
-    end
-end)
-
 CenterFrame.MouseHoverBegin:Connect(function()
     Mouse:SetCursor(Enum.CursorType.hand)
 end)
@@ -100,7 +90,7 @@ LogService:Push("Program Concluded.")
 
 local G4d = require("@packages/g4d")
 
-local Cube = G4d.newModel("assets/baseparts/cube.obj", "assets/textures/base.jpg", {3,0,0})
+local Cube = G4d.newModel("assets/baseparts/cube.obj", "assets/textures/base.jpg", {3,0,0}, nil , {1,1,1})
 
 
 local RotY = 0
@@ -116,4 +106,27 @@ end)
 
 RunService.RenderStep:Connect(function()
     Cube:draw()
+end)
+
+local Size = {1,1,1}
+
+Mouse.Scrolled:Connect(function(X, Y)
+    if UInput:IsKeyDown(Enum.KeyInputs.leftshift) then
+        if Y > 0 then
+            CenterFrame.Size += Udim.FromScale(0.05, 0.05)
+            Size[1]+=0.05
+            Size[2]+=0.05
+            Size[3]+=0.05
+
+            Cube:setScale(unpack(Size))
+        else
+            CenterFrame.Size -= Udim.FromScale(0.05, 0.05)
+
+            Size[1]-=0.05
+            Size[2]-=0.05
+            Size[3]-=0.05
+
+            Cube:setScale(unpack(Size))
+        end
+    end
 end)

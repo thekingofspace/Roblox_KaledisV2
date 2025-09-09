@@ -152,10 +152,10 @@ return {
             scrolllock = "scrolllock";
             rightshift = "rshift";
             leftshift = "lshift";
-            rctrl = "rctrl";
-            lctrl = "lctrl";
-            ralt = "ralt";
-            lalt = "lalt";
+            rightcontrol = "rctrl";
+            leftcontrol = "lctrl";
+            rightalt = "ralt";
+            leftalt = "lalt";
             rgui = "rgui";
             lgui = "lgui";
             mode = "mode";
