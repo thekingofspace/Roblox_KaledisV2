@@ -1,11 +1,19 @@
 local module = {}
 
-local Enum = require("@game/KeyWords/Enum")
 local SignalStorage = require("@game/SignalStorage")
+
+local MouseInputs = {
+    LeftClick = 1;
+    RightClick = 2;
+    MiddleMousePress = 3;
+    ExtraMouse1 = 4;
+    ExtraMouse2 = 5
+}
+
 
 
 function module:GetMouseCode(MouseCode:number)
-    for I, item in pairs(Enum.MouseInputs) do
+    for I, item in pairs(MouseInputs) do
         if item == MouseCode then
             return I
         end

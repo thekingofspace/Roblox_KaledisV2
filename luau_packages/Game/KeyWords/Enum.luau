@@ -18,11 +18,11 @@ return {
     },
 
     MouseInputs = {
-        LeftClick = 1;
-        RightClick = 2;
-        MiddleMousePress = 3;
-        ExtraMouse1 = 4;
-        ExtraMouse2 = 5
+        LeftClick = "LeftClick";
+        RightClick = "RightClick";
+        MiddleMousePress = "MiddleMousePress";
+        ExtraMouse1 = "ExtraMouse1";
+        ExtraMouse2 = "ExtraMouse2"
     };
 
         KeyInputs = {

@@ -63,6 +63,7 @@ Mouse.Moved:Connect(function(X,Y, DX, DY)
 end)
 
 CenterFrame.MouseClick:Connect(function(Action:string)
+    print(Action)
     if Action == Enum.MouseInputs.LeftClick then
         print("ran")
     end
