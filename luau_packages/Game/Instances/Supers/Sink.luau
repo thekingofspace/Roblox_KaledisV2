@@ -19,6 +19,10 @@ function module.new(SuperInject)
             table.clear(self.Sink)
         end)
 
+        builder:InjectExtension("Clone", function(self, Clone)
+            Clone.Sink = self.Sink
+        end)
+
         builder:InjectMethod("Push", function(self, Value:any)
             if (#self.Sink < self.StackSize ) or self.StackSize == 0 then
                 table.insert(self.Sink, Value)

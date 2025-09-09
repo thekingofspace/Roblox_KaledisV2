@@ -122,10 +122,6 @@ function module.new(SuperInject:() -> SuperInject)
         end,
 
         Clone = function(self)
-            if RealSelf.Overides["Clone"] then
-                RealSelf.Overides["Clone"](self)
-            end
-
             local Clone = module.new(SuperInject)
 
             for I, item in pairs(RealSelf.HookedTypes) do
@@ -136,6 +132,10 @@ function module.new(SuperInject:() -> SuperInject)
                         Clone[I] = RealSelf.Properties[I]
                     end
                 end
+            end
+
+            if RealSelf.Overides["Clone"] then
+                RealSelf.Overides["Clone"](self, Clone)
             end
 
             return Clone
