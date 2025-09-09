@@ -4,7 +4,14 @@ local function getDateTime()
     return os.date("%Y-%m-%d %H:%M:%S")
 end
 
-function log:Push(message: string)
+function log:Push(...)
+    local RawInputs = {...}
+
+    for I, item in ipairs(RawInputs) do
+        RawInputs[I] = tostring(item) or ""
+    end
+
+    local message = table.concat(RawInputs, " ")
     local f = io.open("log.txt", "a")
     if f then
         print(string.format("[%s] - %s\n", getDateTime(), message))

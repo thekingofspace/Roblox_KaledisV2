@@ -85,12 +85,12 @@ TestFrame.Parent = Game.Workspace
 
 CenterFrame.TouchBegan:Connect(function(Instance)
     if Instance == TestFrame then
-        print("ran")
+        LogService:Push(CenterFrame, "Touched", TestFrame)
     end
 end)
 
 CenterFrame.MouseClick:Connect(function()
-    print("clicked")
+    LogService:Push(CenterFrame, "Has been clicked")
 end)
 
 

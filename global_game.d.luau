@@ -131,7 +131,7 @@ export type CollectionService = {
 }
 
 export type LogService = {
-    Push: (self: LogService, message: string) -> (),
+    Push: (self: LogService, ...any) -> (),
     Clear: (self: LogService) -> ()
 }
 
