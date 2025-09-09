@@ -3,6 +3,7 @@ local Game = require("@packages/Game")
 local Task, Instance, Udim, Color4, TweenInfo, Enum = Game:GetCommonUtils()
 local LogService:LogService = Game:GetService("LogService")
 local UInput:UserInputService = Game:GetService("UserInputService")
+local RunService:RunService = Game:GetService("RunService")
 local Mouse = UInput:GetMouse()
 LogService:Clear()
 LogService:Push("Program began running")
@@ -98,3 +99,12 @@ end)
 LogService:Push("Program Concluded.")
 
 local G4d = require("@packages/g4d")
+
+local Cube = G4d.newModel("assets/baseparts/cube.obj", "assets/textures/base.jpg", {4,0,0})
+
+Cube:setRotation(0, 40, 0)
+
+
+RunService.RenderStep:Connect(function()
+    Cube:draw()
+end)
