@@ -166,7 +166,6 @@ export type EncodeService = {
     Decode:(self:EncodeService, Type:EncodeTypes, Data:string) -> any
 }
 
-
 declare class Instance
     Name: string
     ClassName: string

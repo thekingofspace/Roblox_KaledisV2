@@ -1,6 +1,7 @@
 {
 	"aliases": {
 		"packages": "luau_packages",
-		"game":  "luau_packages/Game"
+		"game":  "luau_packages/Game",
+		"g4d": "luau_packages/g4d"
 	}
 }
