@@ -10,11 +10,37 @@ local function collectDrawables(root, drawables)
     end
 end
 
+local function IsFullyVisible(frame:UI2D)
+    local target = frame
+    while target do
+        if target.Visible == false or target.Destroyed == true then
+            return false
+        end
+        target = target.Parent
+    end
+
+    local Ancestor = frame
+
+    while true do
+        if Ancestor.Parent and Ancestor.Parent.Name == "Workspace" then
+            break
+        end
+
+        if Ancestor.Parent == nil then
+            return false
+        end
+
+        Ancestor = Ancestor.Parent
+    end
+    
+    return true
+end
+
 return function(DT:number)
     local drawables = {}
 
     for _, item in pairs(Instances.Drawable) do
-        if item.Draw and (not item.Parent or not Instances.Drawable[item.Parent]) then
+        if item.Draw and IsFullyVisible(item) then
             collectDrawables(item, drawables)
         end
     end

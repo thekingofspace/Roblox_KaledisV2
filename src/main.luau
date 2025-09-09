@@ -15,6 +15,7 @@ LeftFrame.Color = Color4.FromHex("#ab6a4f")
 LeftFrame:AddTag("Test")
 LogService:Push("Created frame 1")
 LeftFrame.ZIndex = 1
+LeftFrame.Parent = Game.Workspace
 
 local RightFrame:UI2D = Instance.new("Frame")
 RightFrame.Size = Udim.FromScale(0.6, 0.6)
@@ -26,7 +27,6 @@ RightFrame:AddTag("Test")
 LogService:Push("Created frame 2")
 local TweenService = require("@game/Services/TweenService")
 RightFrame.ZIndex = 2
-
 
 Task.spawn(function()
     while true do
@@ -81,11 +81,16 @@ TestFrame.Size = Udim.FromScale(0.2, 0.2)
 TestFrame.AnchorPoint = Udim.FromScale(0.5, 0.5)
 
 TestFrame.Position = Udim.FromScale(0.9, 0.5)
+TestFrame.Parent = Game.Workspace
 
 CenterFrame.TouchBegan:Connect(function(Instance)
     if Instance == TestFrame then
         print("ran")
     end
+end)
+
+CenterFrame.MouseClick:Connect(function()
+    print("clicked")
 end)
 
 

@@ -3,6 +3,33 @@ local UserInput = require("@game/Services/UserInputService")
 
 local PressedItems = {}
 
+local function IsFullyVisible(frame:UI2D)
+    local target = frame
+    while target do
+        if target.Visible == false or target.Destroyed == true then
+            return false
+        end
+        target = target.Parent
+    end
+
+    local Ancestor = frame
+
+    while true do
+        if Ancestor.Parent and Ancestor.Parent.Name == "Workspace" then
+            break
+        end
+
+        if Ancestor.Parent == nil then
+            return false
+        end
+
+        Ancestor = Ancestor.Parent
+    end
+
+    return true
+end
+
+
 return function(X, Y, Context, Action: "Input" | "Release" | "Move")
     local actions = {
         Input = function(item, IsUnder, WasPressed)
@@ -39,7 +66,7 @@ return function(X, Y, Context, Action: "Input" | "Release" | "Move")
     end
 
     for _, item:UI2D in pairs(Instances.Drawable) do
-        if item.SinkInputs == true and item.Visible == true then
+        if item.SinkInputs == true and IsFullyVisible(item) == true then
             local IsUnder:boolean = item:IsWithin(X, Y)
             local WasPressed:boolean = PressedItems[item] ~= nil
             handler(item, IsUnder, WasPressed)

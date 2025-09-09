@@ -1,6 +1,6 @@
 local Instances = require("@game/InstanceStorage").Drawable
 
-local function IsFullyVisible(frame)
+local function IsFullyVisible(frame:UI2D)
     local target = frame
     while target do
         if target.Visible == false or target.Destroyed == true then
@@ -8,6 +8,21 @@ local function IsFullyVisible(frame)
         end
         target = target.Parent
     end
+
+    local Ancestor = frame
+
+    while true do
+        if Ancestor.Parent and Ancestor.Parent.Name == "Workspace" then
+            break
+        end
+
+        if Ancestor.Parent == nil then
+            return false
+        end
+
+        Ancestor = Ancestor.Parent
+    end
+
     return true
 end
 
