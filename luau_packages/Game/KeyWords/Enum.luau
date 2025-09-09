@@ -150,8 +150,8 @@ return {
             numlock = "numlock";
             capslock = "capslock";
             scrolllock = "scrolllock";
-            rshift = "rshift";
-            lshift = "lshift";
+            rightshift = "rshift";
+            leftshift = "lshift";
             rctrl = "rctrl";
             lctrl = "lctrl";
             ralt = "ralt";

@@ -144,17 +144,19 @@ export type Mouse = {
     Clicked: ReadOnlySignal<number, number, string>;
     Release: ReadOnlySignal<number, number, string>;
     Moved: ReadOnlySignal<number, number, number, number>;
+    Scrolled: ReadOnlySignal<number, number>;
 
     SetCursor:(self:Mouse) -> nil
 }
 
 export type UserInputService = {
-    KeyDown: ReadOnlySignal <string>;
-    KeyRelease: ReadOnlySignal <string>;
+    InputBegan: ReadOnlySignal <string>;
+    InputReleased: ReadOnlySignal <string>;
 
     GetMouse:(self:UserInputService) -> Mouse;
     GetScanCode:(self:UserInputService, KeyCode:string) -> string;
     GetKeyCode:(self:UserInputService, ScanCode:string) -> string;
+    IsKeyDown:(self:UserInputService, KeyCode:string) -> boolean;
 }
 
 

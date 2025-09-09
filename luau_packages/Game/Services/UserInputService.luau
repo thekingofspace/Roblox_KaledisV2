@@ -22,6 +22,10 @@ function module:GetMouseCode(MouseCode:number)
     return
 end
 
+function module:IsKeyDown(Keycode)
+    return love.keyboard.isDown(Keycode)
+end
+
 function module:GetScanCode(KeyCode)
     return love.keyboard.getScancodeFromKey(KeyCode)
 end
@@ -77,6 +81,7 @@ function module:GetMouse()
     RawMouse.Clicked = SignalStorage.MouseClick
     RawMouse.Release = SignalStorage.MouseRelease
     RawMouse.Moved = SignalStorage.MouseMoved
+    RawMouse.Scrolled = SignalStorage.MouseScroll
     RawMouse.Cursor = "arrow"
 
     RawMouse.Visible = true
@@ -97,9 +102,9 @@ SignalStorage.MouseRelease:AddConstructor(function(X,Y, Button)
     return X, Y, module:GetMouseCode(Button)
 end)
 
-module.KeyDown = SignalStorage.KeyDown
+module.InputBegan = SignalStorage.KeyDown
 
-module.KeyRelease = SignalStorage.KeyRelease
+module.InputReleased = SignalStorage.KeyRelease
 
 
 return module

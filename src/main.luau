@@ -58,13 +58,34 @@ CenterFrame:RemoveTag("Test")
 
 CenterFrame.Parent = RightFrame
 
-Mouse.Moved:Connect(function(X,Y, DX, DY)
-    
+Mouse.Scrolled:Connect(function(X, Y)
+    if UInput:IsKeyDown(Enum.KeyInputs.leftshift) then
+        if Y > 0 then
+            CenterFrame.Size += Udim.FromScale(0.05, 0.05)
+        else
+            CenterFrame.Size -= Udim.FromScale(0.05, 0.05)
+        end
+    end
 end)
 
-CenterFrame.MouseClick:Connect(function(Action:string)
-    print(Action)
-    if Action == Enum.MouseInputs.LeftClick then
+CenterFrame.MouseHoverBegin:Connect(function()
+    Mouse:SetCursor(Enum.CursorType.hand)
+end)
+
+CenterFrame.MouseHoverRelease:Connect(function()
+    Mouse:SetCursor(Enum.CursorType.arrow)
+end)
+
+local TestFrame:Frame = Instance.new("Frame")
+
+TestFrame.Size = Udim.FromScale(0.2, 0.2)
+
+TestFrame.AnchorPoint = Udim.FromScale(0.5, 0.5)
+
+TestFrame.Position = Udim.FromScale(0.9, 0.5)
+
+CenterFrame.TouchBegan:Connect(function(Instance)
+    if Instance == TestFrame then
         print("ran")
     end
 end)

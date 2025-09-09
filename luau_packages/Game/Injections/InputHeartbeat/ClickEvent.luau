@@ -39,8 +39,10 @@ return function(X, Y, Context, Action: "Input" | "Release" | "Move")
     end
 
     for _, item:UI2D in pairs(Instances.Drawable) do
-        local IsUnder:boolean = item:IsWithin(X, Y)
-        local WasPressed:boolean = PressedItems[item] ~= nil
-        handler(item, IsUnder, WasPressed)
+        if item.SinkInputs == true and item.Visible == true then
+            local IsUnder:boolean = item:IsWithin(X, Y)
+            local WasPressed:boolean = PressedItems[item] ~= nil
+            handler(item, IsUnder, WasPressed)
+        end
     end
 end

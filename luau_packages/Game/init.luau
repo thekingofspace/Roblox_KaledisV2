@@ -10,6 +10,8 @@ SignalStorage.MouseClick = Signal.CreateSignal()
 SignalStorage.MouseRelease = Signal.CreateSignal()
 SignalStorage.MouseMoved = Signal.CreateSignal()
 
+SignalStorage.MouseScroll = Signal.CreateSignal()
+
 SignalStorage.KeyDown = Signal.CreateSignal()
 SignalStorage.KeyRelease = Signal.CreateSignal()
 
@@ -100,6 +102,10 @@ end
 
 function love.keyreleased(key)
     SignalStorage.KeyRelease:Fire(key)
+end
+
+function love.wheelmoved(x, y)
+    SignalStorage.MouseScroll:Fire(x, y)
 end
 
 return Game
