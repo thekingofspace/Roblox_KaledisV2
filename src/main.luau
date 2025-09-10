@@ -105,6 +105,8 @@ local Sink:Sink = Instance.new("Sink")
 
 local IsSinking = true
 
+Sink.StackSize = 5
+
 UInput.InputBegan:Connect(function(Key:string)
     if IsSinking == true then
         Sink:Push(Key)

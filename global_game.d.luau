@@ -184,6 +184,7 @@ declare class Instance
     IsA: (self: Instance, Type: string) -> boolean
     AddTag: (self: Instance, Tag: string) -> ()
     RemoveTag: (self: Instance, Tag: string) -> ()
+    HasTag: (self: Instance, Tag: string) -> (boolean)
 end
 
 declare class UI2D extends Instance

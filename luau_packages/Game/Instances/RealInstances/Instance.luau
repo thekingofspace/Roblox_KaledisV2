@@ -191,6 +191,10 @@ function module.new(SuperInject:() -> SuperInject)
 
         RemoveTag = function(self, Tag:string)
             CollectionService:RemoveTag(self, Tag)
+        end;
+
+        HasTag = function(self, Tag:string)
+            return table.find(self.Tags, Tag) == nil
         end
     }
 
