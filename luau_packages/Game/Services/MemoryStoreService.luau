@@ -38,7 +38,7 @@ end
 Maps.Sorted = loadJson("MemoryStore/Sorted.json")
 Maps.Hash = loadJson("MemoryStore/Hash.json")
 
-local function AssembleMeta(Value, Expire, Key, Score)
+local function AssembleMeta(Value, Expire, Key, Score:number?)
     return {
         Data = Value,
         MetaData = {
@@ -88,6 +88,20 @@ function module:GetSortedMap(MapName)
 
     Maps.Sorted[MapName] = Maps.Sorted[MapName] or {}
 
+    local function insertByScore(list, newItem)
+        local inserted = false
+        for i, item in ipairs(list) do
+            if not item.MetaData.Score or (newItem.MetaData.Score or 0) > (item.MetaData.Score or 0) then
+                table.insert(list, i, newItem)
+                inserted = true
+                break
+            end
+        end
+        if not inserted then
+            table.insert(list, newItem)
+        end
+    end
+
     function DefMap:GetAsync(Key)
         for I, item in ipairs(Maps.Sorted[MapName]) do
             if item and item.MetaData and item.MetaData.Key == Key then
@@ -104,31 +118,15 @@ function module:GetSortedMap(MapName)
     end
 
     function DefMap:SetAsync(Key, Value, Expire, Score)
-        Score = Score or 0
-        local Index = nil
-
-        for I, item in ipairs(Maps.Sorted[MapName]) do
+        for i, item in ipairs(Maps.Sorted[MapName]) do
             if item and item.MetaData and item.MetaData.Key == Key then
-                Index = I
+                table.remove(Maps.Sorted[MapName], i)
                 break
             end
         end
 
         local newItem = AssembleMeta(Value, os.time() + Expire, Key, Score)
-
-        if Index then
-            table.remove(Maps.Sorted[MapName], Index)
-        end
-
-        local insertIndex = #Maps.Sorted[MapName] + 1
-        for I, item in ipairs(Maps.Sorted[MapName]) do
-            if item and item.MetaData and (item.MetaData.Score or 0) < Score then
-                insertIndex = I
-                break
-            end
-        end
-
-        table.insert(Maps.Sorted[MapName], insertIndex, newItem)
+        insertByScore(Maps.Sorted[MapName], newItem)
         saveJson("MemoryStore/Sorted.json", Maps.Sorted)
     end
 
@@ -142,19 +140,17 @@ function module:GetSortedMap(MapName)
         end
     end
 
-    function DefMap:ListAsync(Reverse)
+    function DefMap:ListAsync(reverse)
         cleanupSortedMap(MapName)
-        local sortedList = Maps.Sorted[MapName] or {}
-        
-        if Reverse then
-            local reversedList = {}
-            for i = #sortedList, 1, -1 do
-                table.insert(reversedList, sortedList[i])
+        local list = Maps.Sorted[MapName] or {}
+        if reverse then
+            local reversed = {}
+            for i = #list, 1, -1 do
+                table.insert(reversed, list[i])
             end
-            return reversedList
+            return reversed
         end
-        
-        return sortedList
+        return list
     end
 
     return setmetatable(DefMap, {__index = DefMap})
