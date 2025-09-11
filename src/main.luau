@@ -95,9 +95,9 @@ LogService:Push("Program Concluded.")
 Mouse.Scrolled:Connect(function(X, Y)
     if UInput:IsKeyDown(Enum.KeyInputs.leftshift) then
         if Y > 0 then
-            CenterFrame.Size += Udim.FromScale(0.05, 0.05)
+            RightFrame.Size += Udim.FromScale(0.05, 0.05)
         else
-            CenterFrame.Size -= Udim.FromScale(0.05, 0.05)
+            RightFrame.Size -= Udim.FromScale(0.05, 0.05)
         end
     end
 end)
