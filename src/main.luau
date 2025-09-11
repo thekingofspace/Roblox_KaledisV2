@@ -3,6 +3,7 @@ local Game = require("@packages/Game")
 local Task, Instance, Udim, Color4, TweenInfo, Enum = Game:GetCommonUtils()
 local LogService:LogService = Game:GetService("LogService")
 local UInput:UserInputService = Game:GetService("UserInputService")
+local CollectionService:CollectionService = Game:GetService("CollectionService")
 local Mouse = UInput:GetMouse()
 LogService:Clear()
 LogService:Push("Program began running")
@@ -74,7 +75,7 @@ TestFrame.Size = Udim.FromScale(0.2, 0.2)
 TestFrame.AnchorPoint = Udim.FromScale(0.5, 0.5)
 
 TestFrame.Position = Udim.FromScale(0.9, 0.5)
-TestFrame.Parent = nil
+TestFrame.Parent = Game.Workspace
 
 CenterFrame.TouchBegan:Connect(function(Instance)
     if Instance == TestFrame then
@@ -122,8 +123,20 @@ Task.delay(5, function()
         return
     end) == true then
         Sink:Process(function(Value)
-            print(Value)
+            LogService:Push(Value)
         end)
     end
     Sink:Pop()
+end)
+
+for I, item in ipairs(CollectionService:GetTagged("Test")) do
+    LogService:Push(item, "has tag Test")
+end
+
+Task.delay(5, function()
+    TestFrame.Parent = RightFrame
+    TestFrame.Size = Udim.FromScale(0.7,0.7)
+    TestFrame.Position = Udim.FromScale(0.5, 0.5)
+
+    TestFrame.ZIndex = 5
 end)

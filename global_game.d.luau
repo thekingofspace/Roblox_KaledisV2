@@ -187,7 +187,20 @@ declare class Instance
     HasTag: (self: Instance, Tag: string) -> (boolean)
 end
 
-declare class UI2D extends Instance
+declare class Parentable extends Instance
+    Parent: any
+
+    ChildAdded: ReadOnlySignal<any>
+    ChildRemoved: ReadOnlySignal<any>
+    DescendantAdded: ReadOnlySignal<any>
+    DescendantRemoved: ReadOnlySignal<any>
+
+    IsDescendantOf: (self: Parentable, Target: any) -> (boolean)
+    GetChildren: (self: Parentable) -> ({any})
+    GetDescendants: (self: Parentable) -> ({any})
+end
+
+declare class UI2D extends Parentable
     Position: UDim
     Size: UDim
     AnchorPoint: UDim
@@ -195,7 +208,6 @@ declare class UI2D extends Instance
     Rotation: number
     Visible: boolean
     ZIndex: number
-    Parent: UI2D?
     CanQuery: boolean
     SinkInputs: boolean
 
@@ -207,9 +219,6 @@ declare class UI2D extends Instance
     MouseHoverRelease: ReadOnlySignal<>
 
     GetPosition: (self: UI2D) -> (number, number)
-    IsDescendantOf: (self: UI2D, Target: UI2D) -> boolean
-    GetChildren: (self: UI2D) -> {UI2D}
-    GetDescendants: (self: UI2D) -> {UI2D}
     GetAbsolute: (self: UI2D) -> (number, number, number, number, number)
     IsWithin: (self: UI2D, X:number, Y:number) -> (boolean)
 end

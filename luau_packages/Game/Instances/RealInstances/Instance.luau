@@ -48,6 +48,18 @@ local Property_Types = {
     Type = "string"
 }
 
+local function HandleEXTS(self, Key:string, Extensions, Passed)
+    if Extensions[Key] then
+        if typeof(Extensions[Key]) == "table" then
+            for I, item in ipairs(Extensions[Key]) do
+                item(self, unpack(Passed))
+            end
+        else
+            Extensions[Key](self, unpack(Passed))
+        end
+    end
+end
+
 function module.new(SuperInject:() -> SuperInject)
     local self  = {}
 
@@ -97,9 +109,7 @@ function module.new(SuperInject:() -> SuperInject)
                     CollectionService:RemoveTag(self, self.Tags[1])
                 end
 
-                if RealSelf.Overides["Destroy"] then
-                    RealSelf.Overides["Destroy"](self)
-                end
+                HandleEXTS(self, "Destroy", RealSelf.Overides, {})
 
                 for I, item:Signal in ipairs(RealSelf.ExposedValues.ChangedSignals_AT) do
                     item:Destroy()
@@ -134,9 +144,7 @@ function module.new(SuperInject:() -> SuperInject)
                 end
             end
 
-            if RealSelf.Overides["Clone"] then
-                RealSelf.Overides["Clone"](self, Clone)
-            end
+            HandleEXTS(self, "Clone", RealSelf.Overides, {Clone})
 
             return Clone
         end,
@@ -230,9 +238,7 @@ function module.new(SuperInject:() -> SuperInject)
         if SuperData.Methods then
             for I, item in ipairs(SuperData.Methods) do
                 RealSelf.Methods[item.Name] = function(self, ...)
-                    if RealSelf.Overides[item.Name] then
-                        RealSelf.Overides[item.Name](self, ...)
-                    end
+                    HandleEXTS(self, item.Name, RealSelf.Overides, {...})
 
                     return item.Code(self, ...)
                 end
@@ -240,8 +246,8 @@ function module.new(SuperInject:() -> SuperInject)
         end
 
         if SuperData.Extensions then
-            for I, item in ipairs(SuperData.Extensions) do
-                RealSelf.Overides[item.Name] = item.Code
+            for I, item in pairs(SuperData.Extensions) do
+                RealSelf.Overides[I] = item
             end
         end
     end

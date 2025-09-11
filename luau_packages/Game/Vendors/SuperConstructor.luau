@@ -18,12 +18,10 @@ function module.new()
         })
     end
 
-    function self:InjectExtension(ID:string, Callback:(self:any, ...any) -> any)
-        table.insert(self.Extensions, {
-            Name = ID,
+    function self:InjectExtension(ID:string, Callback:((self:any, ...any) -> any))
+        self.Extensions[ID] = self.Extensions[ID] or {}
 
-            Code = Callback
-        })
+        table.insert(self.Extensions[ID], Callback)
     end
 
     function self:InjectProperty(ID:string, Value:any, Type:(string & {string})?, ReadTransform:((self:any, Value:any) -> ...any)?, WriteTransform:((self:any, OldValue:any, Value:any) -> any)?)
