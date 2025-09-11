@@ -38,13 +38,14 @@ end
 Maps.Sorted = loadJson("MemoryStore/Sorted.json")
 Maps.Hash = loadJson("MemoryStore/Hash.json")
 
-local function AssembleMeta(Value, Expire, Key)
+local function AssembleMeta(Value, Expire, Key, Score)
     return {
         Data = Value,
         MetaData = {
             Updated = os.time(),
             Expires = Expire,
-            Key = Key
+            Key = Key,
+            Score = Score
         }
     }
 end
@@ -102,7 +103,8 @@ function module:GetSortedMap(MapName)
         return nil, 0
     end
 
-    function DefMap:SetAsync(Key, Value, Expire)
+    function DefMap:SetAsync(Key, Value, Expire, Score)
+        Score = Score or 0
         local Index = nil
 
         for I, item in ipairs(Maps.Sorted[MapName]) do
@@ -112,14 +114,21 @@ function module:GetSortedMap(MapName)
             end
         end
 
-        local newItem = AssembleMeta(Value, os.time() + Expire, Key)
+        local newItem = AssembleMeta(Value, os.time() + Expire, Key, Score)
 
         if Index then
-            Maps.Sorted[MapName][Index] = newItem
-        else
-            table.insert(Maps.Sorted[MapName], newItem)
+            table.remove(Maps.Sorted[MapName], Index)
         end
 
+        local insertIndex = #Maps.Sorted[MapName] + 1
+        for I, item in ipairs(Maps.Sorted[MapName]) do
+            if item and item.MetaData and (item.MetaData.Score or 0) < Score then
+                insertIndex = I
+                break
+            end
+        end
+
+        table.insert(Maps.Sorted[MapName], insertIndex, newItem)
         saveJson("MemoryStore/Sorted.json", Maps.Sorted)
     end
 
@@ -133,9 +142,19 @@ function module:GetSortedMap(MapName)
         end
     end
 
-    function DefMap:ListAsync()
+    function DefMap:ListAsync(Reverse)
         cleanupSortedMap(MapName)
-        return Maps.Sorted[MapName] or {}
+        local sortedList = Maps.Sorted[MapName] or {}
+        
+        if Reverse then
+            local reversedList = {}
+            for i = #sortedList, 1, -1 do
+                table.insert(reversedList, sortedList[i])
+            end
+            return reversedList
+        end
+        
+        return sortedList
     end
 
     return setmetatable(DefMap, {__index = DefMap})

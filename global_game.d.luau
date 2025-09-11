@@ -179,9 +179,9 @@ export type StoredItem<T> = {
 
 export type SortedMap<T> = {
     GetAsync: (self: SortedMap<T>, Key: string) -> (T?, number),
-    SetAsync: (self: SortedMap<T>, Key: string, Value: T, Expire: number) -> (),
+    SetAsync: (self: SortedMap<T>, Key: string, Value: T, Expire: number, Score: number?) -> (),
     RemoveAsync: (self: SortedMap<T>, Key: string) -> (),
-    ListAsync: (self: SortedMap<T>) -> {StoredItem<T>},
+    ListAsync: (self: SortedMap<T>, Reverse: boolean?) -> {StoredItem<T>},
 }
 
 export type HashMap<T> = {
