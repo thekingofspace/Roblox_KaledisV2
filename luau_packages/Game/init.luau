@@ -15,6 +15,8 @@ SignalStorage.MouseScroll = Signal.CreateSignal()
 SignalStorage.KeyDown = Signal.CreateSignal()
 SignalStorage.KeyRelease = Signal.CreateSignal()
 
+SignalStorage.Closing = Signal.CreateSignal()
+
 local Instance = require("@self/KeyWords/Instance")
 local Task = require("@self/KeyWords/Task")
 local TweenInfo = require("@self/KeyWords/TweenInfo")
@@ -70,9 +72,17 @@ function love.update()
     SignalStorage.HeartBeat:Fire()
 end
 
+local CloseCall = nil
+
 function Game:BindToClose(Callback: () -> nil)
-    function love.quit()
-        Callback()
+    CloseCall = Callback
+
+    SignalStorage.Closing:Fire()
+end
+
+function love.quit()
+    if CloseCall then
+        CloseCall()
     end
 end
 

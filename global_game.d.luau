@@ -166,6 +166,35 @@ export type EncodeService = {
     Decode:(self:EncodeService, Type:EncodeTypes, Data:string) -> any
 }
 
+export type MetaData = {
+    Updated: number,
+    Expires: number,
+    Key: string,
+}
+
+export type StoredItem<T> = {
+    Data: T,
+    MetaData: MetaData,
+}
+
+export type SortedMap<T> = {
+    GetAsync: (self: SortedMap<T>, Key: string) -> (T?, number),
+    SetAsync: (self: SortedMap<T>, Key: string, Value: T, Expire: number) -> (),
+    RemoveAsync: (self: SortedMap<T>, Key: string) -> (),
+    ListAsync: (self: SortedMap<T>) -> {StoredItem<T>},
+}
+
+export type HashMap<T> = {
+    GetAsync: (self: HashMap<T>, Key: string) -> (T?, number),
+    SetAsync: (self: HashMap<T>, Key: string, Value: T, Expire: number) -> (),
+    RemoveAsync: (self: HashMap<T>, Key: string) -> (),
+}
+
+export type MemoryStoreService = {
+    GetSortedMap: (self: MemoryStoreService, MapName: string) -> SortedMap<any>,
+    GetHashMap: (self: MemoryStoreService, MapName: string) -> HashMap<any>,
+}
+
 declare class Instance
     Name: string
     ClassName: string

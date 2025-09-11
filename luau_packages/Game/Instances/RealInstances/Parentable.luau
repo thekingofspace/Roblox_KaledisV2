@@ -111,6 +111,7 @@ function module.new(SuperInject)
             while true do
                 local remaining = Timeout and (Timeout - (os.clock() - startTime)) or nil
                 if remaining and remaining <= 0 then
+                    error("Endless yield on" .. Child)
                     return nil
                 end
 
