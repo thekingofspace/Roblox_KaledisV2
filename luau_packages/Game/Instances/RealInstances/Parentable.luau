@@ -93,6 +93,34 @@ function module.new(SuperInject)
         builder:InjectMethod("GetChildren", function(self)
             return self.Children
         end)
+
+        builder:InjectMethod("FindFirstChild", function(self, Child:string)
+            for I, item in ipairs(self.Children) do
+                if item.Name == Child then
+                    return item
+                end
+            end
+
+            return
+        end)
+
+        builder:InjectMethod("WaitForChild", function(self, Child: string, Timeout: number?)
+            local startTime = os.clock()
+            Timeout = Timeout or 5
+
+            while true do
+                local remaining = Timeout and (Timeout - (os.clock() - startTime)) or nil
+                if remaining and remaining <= 0 then
+                    return nil
+                end
+
+                local NewChild = self.childadded_private:Wait(remaining)
+
+                if NewChild.Name == Child then
+                    return NewChild
+                end
+            end
+        end)
         
         builder:InjectMethod("GetDescendants", function(self)
             local descendants = {}

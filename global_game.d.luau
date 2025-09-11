@@ -198,6 +198,8 @@ declare class Parentable extends Instance
     IsDescendantOf: (self: Parentable, Target: any) -> (boolean)
     GetChildren: (self: Parentable) -> ({any})
     GetDescendants: (self: Parentable) -> ({any})
+    FindFirstChild: (self: Parentable, ChildName:string) -> (any?)
+    WaitForChild: (self: Parentable, ChildName:string, Timeout:number?) -> (any?)
 end
 
 declare class UI2D extends Parentable

@@ -70,6 +70,8 @@ end)
 
 local TestFrame:Frame = Instance.new("Frame")
 
+TestFrame.Name = "Test"
+
 TestFrame.Size = Udim.FromScale(0.2, 0.2)
 
 TestFrame.AnchorPoint = Udim.FromScale(0.5, 0.5)
@@ -139,4 +141,8 @@ Task.delay(5, function()
     TestFrame.Position = Udim.FromScale(0.5, 0.5)
 
     TestFrame.ZIndex = 5
+end)
+
+Task.spawn(function()
+    print(RightFrame:WaitForChild("Test", 7))
 end)
