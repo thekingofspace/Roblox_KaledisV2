@@ -146,9 +146,10 @@ function module.new(SuperInject)
         end)
         
         builder:InjectExtension("Destroy", function(self)
-            for _, child in ipairs(self.Children) do
-                child.Parent = nil
+            for _, child in ipairs(self:GetChildren()) do
+                child:Destroy()
             end
+            
             self.Parent = nil
         end)
 

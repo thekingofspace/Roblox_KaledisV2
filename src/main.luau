@@ -1,6 +1,7 @@
 local Game = require("@packages/Game")
 
 local Task, Instance, Udim, Color4, TweenInfo, Enum = Game:GetCommonUtils()
+local MemoryStore:MemoryStoreService = Game:GetService("MemoryStore")
 local LogService:LogService = Game:GetService("LogService")
 local UInput:UserInputService = Game:GetService("UserInputService")
 local CollectionService:CollectionService = Game:GetService("CollectionService")
@@ -147,10 +148,7 @@ Task.spawn(function()
     print(RightFrame:WaitForChild("Test"))
 end)
 
-local MemoryStore:MemoryStoreService = Game:GetService("MemoryStore")
-
 MemoryStore:GetHashMap("Test"):SetAsync("Test", {Test = true}, 500)
-
 MemoryStore:GetHashMap("Test"):SetAsync("Test2", {Test = true}, 500)
 
 MemoryStore:GetSortedMap("Test"):SetAsync("Test", {Test = true}, 500, 50)
