@@ -229,11 +229,19 @@ function module.new(SuperInject:() -> SuperInject)
                 RealSelf.HookedTypes[item.Name] = item.Type or typeof(item.Value)
 
                 if item.ReadTransform then
-                    RealSelf.Transforms.Read[item.Name] = item.ReadTransform
+                    RealSelf.Transforms.Read[item.Name] = function(self, Value)
+                        HandleEXTS(self, `_R/{item.Name}`, RealSelf.Overides, {Value})
+
+                        return item.ReadTransform(self, Value)
+                    end
                 end
 
                 if item.WriteTransform then
-                    RealSelf.Transforms.Write[item.Name] = item.WriteTransform
+                    RealSelf.Transforms.Write[item.Name] = function(self, OldValue, NewValue)
+                        HandleEXTS(self, `_W/{item.Name}`, RealSelf.Overides, {OldValue, NewValue})
+
+                        return item.WriteTransform(self, OldValue, NewValue)
+                    end
                 end
             end
        end

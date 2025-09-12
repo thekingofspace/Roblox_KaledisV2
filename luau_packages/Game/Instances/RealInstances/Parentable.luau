@@ -95,6 +95,13 @@ function module.new(SuperInject)
             return self.Children
         end)
 
+        builder:InjectExtension("Clone", function(self, Clone)
+            Clone.Parent = nil
+            for I, item in ipairs(self:GetChildren()) do
+                item:Clone().Parent = Clone
+            end
+        end)
+
         builder:InjectMethod("FindFirstChild", function(self, Child:string)
             for I, item in ipairs(self.Children) do
                 if item.Name == Child then

@@ -1,6 +1,5 @@
 local Instances = require("@game/InstanceStorage")
 
-
 local function collectDrawables(root, drawables)
     table.insert(drawables, root)
     for _, child in ipairs(root:GetChildren()) do
@@ -36,6 +35,45 @@ local function IsFullyVisible(frame:UI2D)
     return true
 end
 
+local function getHierarchyPath(obj)
+    local path = {}
+    local current = obj
+    while current do
+        table.insert(path, 1, current)
+        current = current.Parent
+    end
+    return path
+end
+
+local function isAncestor(objA, objB)
+    local current = objB.Parent
+    while current do
+        if current == objA then
+            return true
+        end
+        current = current.Parent
+    end
+    return false
+end
+
+local function findCommonAncestor(objA, objB)
+    local pathA = getHierarchyPath(objA)
+    local pathB = getHierarchyPath(objB)
+    
+    local commonAncestor = nil
+    local minLength = math.min(#pathA, #pathB)
+    
+    for i = 1, minLength do
+        if pathA[i] == pathB[i] then
+            commonAncestor = pathA[i]
+        else
+            break
+        end
+    end
+    
+    return commonAncestor
+end
+
 return function(DT:number)
     local drawables = {}
 
@@ -46,6 +84,34 @@ return function(DT:number)
     end
 
     table.sort(drawables, function(a, b)
+        if isAncestor(a, b) then
+            return true 
+        elseif isAncestor(b, a) then
+            return false
+        end
+        
+        local commonAncestor = findCommonAncestor(a, b)
+        
+        if commonAncestor then
+            local pathA = getHierarchyPath(a)
+            local pathB = getHierarchyPath(b)
+            
+            local commonIndex = 1
+            for i = 1, math.min(#pathA, #pathB) do
+                if pathA[i] == pathB[i] then
+                    commonIndex = i
+                else
+                    break
+                end
+            end
+            
+            if commonIndex < math.min(#pathA, #pathB) then
+                local childA = pathA[commonIndex + 1]
+                local childB = pathB[commonIndex + 1]
+                return (childA.ZIndex or 0) < (childB.ZIndex or 0)
+            end
+        end
+        
         return (a.ZIndex or 0) < (b.ZIndex or 0)
     end)
 

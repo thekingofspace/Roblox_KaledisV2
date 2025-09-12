@@ -155,3 +155,6 @@ MemoryStore:GetHashMap("Test"):SetAsync("Test2", {Test = true}, 500)
 
 MemoryStore:GetSortedMap("Test"):SetAsync("Test", {Test = true}, 500, 50)
 MemoryStore:GetSortedMap("Test"):SetAsync("Test2", {Test = true}, 500, 50)
+
+local NewFrame = LeftFrame:Clone()
+NewFrame.Parent = TestFrame
