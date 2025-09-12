@@ -141,6 +141,7 @@ function module:GetSortedMap(MapName)
     end
 
     function DefMap:ListAsync(reverse)
+        reverse = not reverse
         cleanupSortedMap(MapName)
         local list = Maps.Sorted[MapName] or {}
         if reverse then
@@ -151,6 +152,10 @@ function module:GetSortedMap(MapName)
             return reversed
         end
         return list
+    end
+
+    function DefMap:Drop()
+        Maps.Sorted[MapName] = {}
     end
 
     return setmetatable(DefMap, {__index = DefMap})
@@ -186,6 +191,21 @@ function module:GetHashMap(MapName)
             saveJson("MemoryStore/Hash.json", Maps.Hash)
         end
     end
+
+    function DefMap:ListAsync()
+        local ExitMap = {}
+
+        for I, item in pairs(Maps.Hash[MapName]) do
+            table.insert(item, ExitMap)
+        end
+
+        return ExitMap
+    end
+
+    function DefMap:Drop()
+        Maps.Hash[MapName] = {}
+    end
+    
 
     return setmetatable(DefMap, {__index = DefMap})
 end

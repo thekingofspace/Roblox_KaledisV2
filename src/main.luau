@@ -80,7 +80,7 @@ TestFrame.Position = Udim.FromScale(0.9, 0.5)
 TestFrame.Parent = Game.Workspace
 
 CenterFrame.TouchBegan:Connect(function(Instance)
-    if Instance == TestFrame then
+    if not Instance:IsDescendantOf(LeftFrame) then
         LogService:Push(CenterFrame, "Touched", TestFrame)
     end
 end)
@@ -144,5 +144,5 @@ Task.delay(5, function()
 end)
 
 Task.spawn(function()
-    print(RightFrame:WaitForChild("Test", 7))
+    print(RightFrame:WaitForChild("Test"))
 end)

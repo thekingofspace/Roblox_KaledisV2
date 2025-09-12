@@ -170,24 +170,28 @@ export type MetaData = {
     Updated: number,
     Expires: number,
     Key: string,
+    Score: number?,
 }
 
-export type StoredItem<T> = {
+export type Entry<T = any> = {
     Data: T,
-    MetaData: MetaData,
+    MetaData: MetaData
 }
 
-export type SortedMap<T> = {
+export type SortedMap<T = any> = {
     GetAsync: (self: SortedMap<T>, Key: string) -> (T?, number),
     SetAsync: (self: SortedMap<T>, Key: string, Value: T, Expire: number, Score: number?) -> (),
     RemoveAsync: (self: SortedMap<T>, Key: string) -> (),
-    ListAsync: (self: SortedMap<T>, Reverse: boolean?) -> {StoredItem<T>},
+    ListAsync: (self: SortedMap<T>, reverse: boolean?) -> { Entry<T> },
+    Drop: (self: SortedMap<T>) -> (),
 }
 
-export type HashMap<T> = {
+export type HashMap<T = any> = {
     GetAsync: (self: HashMap<T>, Key: string) -> (T?, number),
     SetAsync: (self: HashMap<T>, Key: string, Value: T, Expire: number) -> (),
     RemoveAsync: (self: HashMap<T>, Key: string) -> (),
+    ListAsync: (self: HashMap<T>) -> { Entry<T> },
+    Drop: (self: HashMap<T>) -> (),
 }
 
 export type MemoryStoreService = {
