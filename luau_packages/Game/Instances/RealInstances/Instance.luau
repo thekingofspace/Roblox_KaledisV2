@@ -51,13 +51,20 @@ local Property_Types = {
 local function HandleEXTS(self, Key:string, Extensions, Passed)
     if Extensions[Key] then
         if typeof(Extensions[Key]) == "table" then
+            local Returns = {}
             for I, item in ipairs(Extensions[Key]) do
-                item(self, unpack(Passed))
+                for I, item in ipairs({Returns, item(self, unpack(Passed))}) do
+                    table.insert(Returns, item)
+                end
             end
+
+            return unpack(Returns)
         else
-            Extensions[Key](self, unpack(Passed))
+            return Extensions[Key](self, unpack(Passed))
         end
     end
+
+    return 
 end
 
 function module.new(SuperInject:() -> SuperInject)

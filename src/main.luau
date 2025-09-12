@@ -146,3 +146,12 @@ end)
 Task.spawn(function()
     print(RightFrame:WaitForChild("Test"))
 end)
+
+local MemoryStore:MemoryStoreService = Game:GetService("MemoryStore")
+
+MemoryStore:GetHashMap("Test"):SetAsync("Test", {Test = true}, 500)
+
+MemoryStore:GetHashMap("Test"):SetAsync("Test2", {Test = true}, 500)
+
+MemoryStore:GetSortedMap("Test"):SetAsync("Test", {Test = true}, 500, 50)
+MemoryStore:GetSortedMap("Test"):SetAsync("Test2", {Test = true}, 500, 50)
