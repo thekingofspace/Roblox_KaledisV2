@@ -26,10 +26,15 @@ function module.new()
                 return
             end
 
-            local truePosX = self.Position.X.Scale - self.Size.X.Scale * self.AnchorPoint.X.Scale
-            local truePosY = self.Position.Y.Scale - self.Size.Y.Scale * self.AnchorPoint.Y.Scale
+            local TrueSize = self.Size
+            local TrusPosition = self.Position
+            local TrueAnchor = self.AnchorPoint
 
-            local Width, Height = self.Size:ToAbsolute()
+            local truePosX = TrusPosition.X.Scale - TrueSize.X.Scale * TrueAnchor.X.Scale
+            local truePosY = TrusPosition.Y.Scale - TrueSize.Y.Scale * TrueAnchor.Y.Scale
+            
+
+            local Width, Height = TrueSize:ToAbsolute()
             local TrueRotation = self.Rotation
 
             local Parent = self.Parent
@@ -52,8 +57,8 @@ function module.new()
             love.graphics.push()
             love.graphics.setColor(self.Color:GetColor())
 
-            local centerX = X + Width * self.AnchorPoint.X.Scale
-            local centerY = Y + Height * self.AnchorPoint.Y.Scale
+            local centerX = X + Width * TrueAnchor.X.Scale
+            local centerY = Y + Height * TrueAnchor.Y.Scale
 
             love.graphics.translate(centerX, centerY)
             love.graphics.rotate(math.rad(TrueRotation))
