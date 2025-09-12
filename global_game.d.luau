@@ -212,6 +212,7 @@ declare class Instance
     Destroyed: boolean
 
     Changed: ReadOnlySignal<string, any>
+    Destroying: ReadOnlySignal<>
 
     Destroy: (self: Instance) -> ()
     Clone: <T>(self: T) -> T

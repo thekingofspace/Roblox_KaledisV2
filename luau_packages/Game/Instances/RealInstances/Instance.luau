@@ -45,7 +45,8 @@ local Property_Types = {
     ClassName = "frozen",
     ID = "frozen",
     Changed = "frozen",
-    Type = "string"
+    Type = "string",
+    Destroying = "frozen"
 }
 
 local function HandleEXTS(self, Key:string, Extensions, Passed)
@@ -74,6 +75,7 @@ function module.new(SuperInject:() -> SuperInject)
 
     RealSelf.ExposedValues = {
         Changed_Signal = Signals.CreateSignal();
+        Destroying_Signal = Signals.CreateSignal();
         Destroyed = false;
         Tags = {};
         Attribute = {};
@@ -86,6 +88,7 @@ function module.new(SuperInject:() -> SuperInject)
         ClassName = "Instance";
         ID = ID_Generator:GetUniqueID();
         Changed = Signals.CreateReadOnlySignal(RealSelf.ExposedValues.Changed_Signal),
+        Destroying = Signals.CreateReadOnlySignal(RealSelf.ExposedValues.Destroying_Signal),
         Type = "instance"
     }
 
@@ -105,6 +108,8 @@ function module.new(SuperInject:() -> SuperInject)
             if self.Destroyed == true then
                 return
             end
+
+            self.Destroying_Signal:Fire()
 
             Task.spawn(function()
                 if self.Draw ~= nil then
