@@ -30,6 +30,20 @@ function module.new()
         table.insert(self.ClassTypes, ID)
     end
 
+    function self:InjectPropertyExtension(Property:string, ReadTransform:((self:any, Value:any) -> nil)?, WriteTransform:((self:any, OldValue:any, Value:any) -> nil)?)
+        if ReadTransform then
+            self.Extensions[`_R/{Property}`] = self.Extensions[`_R/{Property}`] or {}
+
+            table.insert(self.Extensions[`_R/{Property}`], ReadTransform)
+        end
+
+        if WriteTransform then
+            self.Extensions[`_W/{Property}`] = self.Extensions[`_W/{Property}`] or {}
+
+            table.insert(self.Extensions[`_W/{Property}`], ReadTransform)
+        end
+    end
+
     function self:InjectProperty(ID:string, Value:any, Type:(string & {string})?, ReadTransform:((self:any, Value:any) -> ...any)?, WriteTransform:((self:any, OldValue:any, Value:any) -> any)?)
         table.insert(self.Properties, {
             Name = ID;
