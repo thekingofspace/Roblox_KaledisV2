@@ -54,7 +54,7 @@ function module.new(SuperInject)
                     end
                 end
 
-                if newValue == nil then
+                if newValue == nil or newValue.Children == nil then
                     return "nil"
                 end
 
