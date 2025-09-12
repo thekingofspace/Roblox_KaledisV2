@@ -9,6 +9,7 @@ local module = {}
 function module.new(SuperInject)
     return InstanceBase.new(function()
         local builder = Builder.new()
+        builder:InjectClassType("UI_Element")
         
         builder:InjectPrivate("TouchBegan_Private", Signals.CreateSignal())
         builder:InjectPrivate("TouchEnded_Private", Signals.CreateSignal())

@@ -98,6 +98,8 @@ function module.new(SuperInject:() -> SuperInject)
         Write = {}
     }
 
+    RealSelf.ClassTypes = {}
+
     RealSelf.Methods = {
         Destroy = function(self)
             if self.Destroyed == true then
@@ -197,7 +199,7 @@ function module.new(SuperInject:() -> SuperInject)
         end;
 
         IsA = function(self, Type:string)
-            return self.ClassName == Type
+            return self.ClassName == Type or table.find(RealSelf.ClassTypes, Type) ~= nil
         end;
 
         AddTag = function(self, Tag:string)
@@ -218,7 +220,7 @@ function module.new(SuperInject:() -> SuperInject)
     end
 
     if SuperInject then
-       local SuperData:SuperInject = SuperInject()
+       local SuperData = SuperInject()
 
        if SuperData.Properties then
             for I, item in ipairs(SuperData.Properties) do
@@ -255,6 +257,12 @@ function module.new(SuperInject:() -> SuperInject)
         if SuperData.Extensions then
             for I, item in pairs(SuperData.Extensions) do
                 RealSelf.Overides[I] = item
+            end
+        end
+
+        if SuperData.ClassTypes then
+            for I, item in ipairs(SuperData.ClassTypes) do
+                table.insert(RealSelf.ClassTypes, item)
             end
         end
     end

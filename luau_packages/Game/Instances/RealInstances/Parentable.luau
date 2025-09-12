@@ -7,6 +7,7 @@ local module = {}
 function module.new(SuperInject)
     return InstanceBase.new(function()
         local builder = Builder.new()
+        builder:InjectClassType("Parentable")
         
         builder:InjectPrivate("Children", {})
         builder:InjectProperty("Name", "Parentable")
@@ -54,7 +55,7 @@ function module.new(SuperInject)
                     end
                 end
 
-                if newValue == nil or newValue.Children == nil then
+                if newValue == nil or not newValue:IsA("Parentable") then
                     return "nil"
                 end
 

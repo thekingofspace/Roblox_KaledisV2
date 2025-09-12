@@ -10,6 +10,8 @@ function module.new()
 
     self.Extensions = {}
 
+    self.ClassTypes = {}
+
     function self:InjectMethod(ID:string, Callback:(self:any, ...any) -> any)
         table.insert(self.Methods, {
             Name = ID,
@@ -22,6 +24,10 @@ function module.new()
         self.Extensions[ID] = self.Extensions[ID] or {}
 
         table.insert(self.Extensions[ID], Callback)
+    end
+
+    function self:InjectClassType(ID:string)
+        table.insert(self.ClassTypes, ID)
     end
 
     function self:InjectProperty(ID:string, Value:any, Type:(string & {string})?, ReadTransform:((self:any, Value:any) -> ...any)?, WriteTransform:((self:any, OldValue:any, Value:any) -> any)?)
@@ -47,7 +53,8 @@ function module.new()
             Methods = self.Methods;
             Properties = self.Properties;
             PrivateProperties = self.PrivateProperties;
-            Extensions = self.Extensions
+            Extensions = self.Extensions;
+            ClassTypes = self.ClassTypes
         }
     end
 
