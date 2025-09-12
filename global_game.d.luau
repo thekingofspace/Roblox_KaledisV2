@@ -199,6 +199,11 @@ export type MemoryStoreService = {
     GetHashMap: (self: MemoryStoreService, MapName: string) -> HashMap<any>,
 }
 
+type ClassName =
+"UI_Element" | "Instance" | "Parentable" |
+"Frame" | "BindableEvent" | "Sink"
+
+
 declare class Instance
     Name: string
     ClassName: string
@@ -214,7 +219,7 @@ declare class Instance
     SetAttribute: (self: Instance, Attribute: string, Newvalue: any) -> ()
     GetAttributeChangedSignal: (self: Instance, Attribute: string) -> ReadOnlySignal<any>
     GetPropertyChangedSignal: (self: Instance, Property: string) -> ReadOnlySignal<any>
-    IsA: (self: Instance, Type: string) -> boolean
+    IsA: (self: Instance, Type: ClassName | string) -> boolean
     AddTag: (self: Instance, Tag: string) -> ()
     RemoveTag: (self: Instance, Tag: string) -> ()
     HasTag: (self: Instance, Tag: string) -> (boolean)

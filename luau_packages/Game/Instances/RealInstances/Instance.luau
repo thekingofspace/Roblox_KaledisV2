@@ -98,7 +98,7 @@ function module.new(SuperInject:() -> SuperInject)
         Write = {}
     }
 
-    RealSelf.ClassTypes = {}
+    RealSelf.ClassTypes = {"Instance"}
 
     RealSelf.Methods = {
         Destroy = function(self)
