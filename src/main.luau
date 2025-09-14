@@ -33,7 +33,6 @@ LogService:Push("Created frame 2")
 local TweenService = require("@game/Services/TweenService")
 RightFrame.ZIndex = 2
 
-Game.Workspace.Color = Color4.FromHex("#41ff41")
 
 Task.spawn(function()
     while true do
@@ -105,8 +104,6 @@ Mouse.Scrolled:Connect(function(X, Y)
         end
     end
 end)
-
-Game.Workspace.Color = Color4.FromHex("#41ff41")
 
 local Sink:Sink = Instance.new("Sink")
 

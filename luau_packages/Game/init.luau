@@ -42,7 +42,7 @@ function Game:GetCommonUtils()
     return Task, Instance, UDIM, Color4, TweenInfo, Enum
 end
 
-Game.Workspace = Instance.new("Frame")::UI2D
+Game.Workspace = Instance.new("Frame")
 Game.Workspace.AnchorPoint = UDIM.FromScale(0.5, 0.5)
 Game.Workspace.Size = UDIM.FromScale(1, 1)
 Game.Workspace.Position = UDIM.FromScale(0.5, 0.5)
@@ -51,6 +51,8 @@ Game.Workspace.Name = "Workspace"
 Game.Workspace.ZIndex = -999
 Game.Workspace.CanQuery = false
 Game.Workspace.SinkInputs = false
+Game.Workspace:LockElement()
+
 
 function love.draw()
     local currentTime = love.timer.getTime()

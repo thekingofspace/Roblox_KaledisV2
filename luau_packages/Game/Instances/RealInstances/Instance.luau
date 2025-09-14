@@ -127,6 +127,7 @@ function module.new(SuperInject:() -> SuperInject)
 
     RealSelf.HookedTypes = {}
     RealSelf.Overides = {}
+    RealSelf.Locked = false
 
     RealSelf.Transforms = {
         Read = {};
@@ -247,6 +248,10 @@ function module.new(SuperInject:() -> SuperInject)
 
         HasTag = function(self, Tag:string)
             return table.find(self.Tags, Tag) == nil
+        end;
+
+        LockElement = function(self)
+            RealSelf.Locked = true
         end
     }
 
@@ -317,6 +322,10 @@ function module.new(SuperInject:() -> SuperInject)
     local  MT = {}
 
     MT.__newindex = function(self, Index:string,  NewValue)
+        if RealSelf.Locked == true then
+            error(tostring(self) .. "Is locked and can not be edited.")
+        end
+        
         if RealSelf.ExposedValues[Index] ~= nil then
             RealSelf.ExposedValues[Index] = NewValue
         end
