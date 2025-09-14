@@ -68,6 +68,39 @@ local function HandleEXTS(self, Key:string, Extensions, Passed)
     return 
 end
 
+local function HandleRender(Instance, RenderType:"Logic" | "Drawable")
+    local Casses = {
+        ["Logic"] = function()
+            InstanceStorage.Drawable[Instance.ID] = Instance
+        end;
+
+        ["Drawable"] = function()
+            InstanceStorage.Drawable[Instance.ID] = Instance
+        end;
+    }
+
+    if Casses[RenderType] then
+        Casses[RenderType]()
+    end
+end
+
+local function RemoveRender(Instance, RenderType:"Logic" | "Drawable")
+    local Casses = {
+        ["Logic"] = function()
+            InstanceStorage.Drawable[Instance.ID] = nil
+            SignalStorage.RenderStep:Wait()
+        end;
+
+        ["Drawable"] = function()
+            InstanceStorage.Drawable[Instance.ID] = nil
+        end;
+    }
+
+    if Casses[RenderType] then
+        Casses[RenderType]()
+    end
+end
+
 function module.new(SuperInject:() -> SuperInject)
     local self  = {}
 
@@ -103,6 +136,8 @@ function module.new(SuperInject:() -> SuperInject)
 
     RealSelf.ClassTypes = {"Instance"}
 
+    RealSelf.RenderingType = "Logic"
+
     RealSelf.Methods = {
         Destroy = function(self)
             if self.Destroyed == true then
@@ -112,12 +147,7 @@ function module.new(SuperInject:() -> SuperInject)
             self.Destroying_Signal:Fire()
 
             Task.spawn(function()
-                if self.Draw ~= nil then
-                    InstanceStorage.Drawable[self.ID] = nil
-                    SignalStorage.RenderStep:Wait()
-                else
-                    InstanceStorage.Logic[self.ID] = nil
-                end
+                RemoveRender(self, RealSelf.RenderingType)
 
                 while #self.Tags ~= 0 do 
                     CollectionService:RemoveTag(self, self.Tags[1])
@@ -278,6 +308,10 @@ function module.new(SuperInject:() -> SuperInject)
                 table.insert(RealSelf.ClassTypes, item)
             end
         end
+
+        if SuperData.RenderType then
+            RealSelf.RenderingType = SuperData.RenderType
+        end
     end
     
     local  MT = {}
@@ -370,11 +404,7 @@ function module.new(SuperInject:() -> SuperInject)
 
     self = setmetatable(self, MT)
 
-    if self.Draw then
-        InstanceStorage.Drawable[self.ID] = self
-    else
-        InstanceStorage.Logic[self.ID] = self
-    end
+    HandleRender(self, RealSelf.RenderingType)
 
     return self
 end

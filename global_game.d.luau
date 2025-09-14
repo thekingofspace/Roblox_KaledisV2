@@ -201,7 +201,8 @@ export type MemoryStoreService = {
 
 type ClassName =
 "UI_Element" | "Instance" | "Parentable" |
-"Frame" | "BindableEvent" | "Sink"
+"Frame" | "BindableEvent" | "Sink" |
+"UI_Group"
 
 
 declare class Instance
@@ -266,6 +267,10 @@ end
 
 declare class Frame extends UI2D
 
+end
+
+declare class UI_Group extends Parentable
+    Visible: boolean
 end
 
 declare class BindableEvent extends Instance

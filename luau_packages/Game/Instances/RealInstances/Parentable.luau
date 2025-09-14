@@ -178,6 +178,11 @@ function module.new(SuperInject)
                     continue
                 end
 
+                if key == "RenderType" then
+                    SuperData[key] = NewData[key]
+                    continue
+                end
+
                 for _, value in ipairs(items) do
                     table.insert(SuperData[key], value)
                 end

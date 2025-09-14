@@ -12,6 +12,8 @@ function module.new()
 
     self.ClassTypes = {}
 
+    self.RenderType = "Logic"
+
     function self:InjectMethod(ID:string, Callback:(self:any, ...any) -> any)
         table.insert(self.Methods, {
             Name = ID,
@@ -62,13 +64,18 @@ function module.new()
         self.PrivateProperties[ID] = Value
     end
 
+    function self:SetRenderType(RenderType:"Logic" | "Drawable")
+        self.RenderType = RenderType
+    end
+
     function self:BuildArray():SuperInject
         return {
             Methods = self.Methods;
             Properties = self.Properties;
             PrivateProperties = self.PrivateProperties;
             Extensions = self.Extensions;
-            ClassTypes = self.ClassTypes
+            ClassTypes = self.ClassTypes;
+            RenderType = self.RenderType
         }
     end
 

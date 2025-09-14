@@ -10,6 +10,7 @@ function module.new(SuperInject)
     return InstanceBase.new(function()
         local builder = Builder.new()
         builder:InjectClassType("UI_Element")
+        builder:SetRenderType("Drawable")
         
         builder:InjectPrivate("TouchBegan_Private", Signals.CreateSignal())
         builder:InjectPrivate("TouchEnded_Private", Signals.CreateSignal())
@@ -61,13 +62,15 @@ function module.new(SuperInject)
             local Parent = self.Parent
 
             while Parent ~= nil do
-                TrueRotation += Parent.Rotation
+                if Parent:IsA("UI_Element") then
+                    TrueRotation += Parent.Rotation
 
-                truePosX = truePosX * Parent.Size.X.Scale + Parent.Position.X.Scale - Parent.Size.X.Scale * Parent.AnchorPoint.X.Scale
-                truePosY = truePosY * Parent.Size.Y.Scale + Parent.Position.Y.Scale - Parent.Size.Y.Scale * Parent.AnchorPoint.Y.Scale
+                    truePosX = truePosX * Parent.Size.X.Scale + Parent.Position.X.Scale - Parent.Size.X.Scale * Parent.AnchorPoint.X.Scale
+                    truePosY = truePosY * Parent.Size.Y.Scale + Parent.Position.Y.Scale - Parent.Size.Y.Scale * Parent.AnchorPoint.Y.Scale
 
-                Width = Width * Parent.Size.X.Scale
-                Height = Height * Parent.Size.Y.Scale
+                    Width = Width * Parent.Size.X.Scale
+                    Height = Height * Parent.Size.Y.Scale
+                end
 
                 Parent = Parent.Parent
             end
@@ -116,6 +119,11 @@ function module.new(SuperInject)
                         end
                     end
 
+                    continue
+                end
+
+                if key == "RenderType" then
+                    SuperData[key] = NewData[key]
                     continue
                 end
 

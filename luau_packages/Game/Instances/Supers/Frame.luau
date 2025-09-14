@@ -40,13 +40,15 @@ function module.new()
             local Parent = self.Parent
 
             while Parent ~= nil do
-                TrueRotation += Parent.Rotation
+                if Parent:IsA("UI_Element") then
+                    TrueRotation += Parent.Rotation
 
-                truePosX = truePosX * Parent.Size.X.Scale + Parent.Position.X.Scale - Parent.Size.X.Scale * Parent.AnchorPoint.X.Scale
-                truePosY = truePosY * Parent.Size.Y.Scale + Parent.Position.Y.Scale - Parent.Size.Y.Scale * Parent.AnchorPoint.Y.Scale
+                    truePosX = truePosX * Parent.Size.X.Scale + Parent.Position.X.Scale - Parent.Size.X.Scale * Parent.AnchorPoint.X.Scale
+                    truePosY = truePosY * Parent.Size.Y.Scale + Parent.Position.Y.Scale - Parent.Size.Y.Scale * Parent.AnchorPoint.Y.Scale
 
-                Width = Width * Parent.Size.X.Scale
-                Height = Height * Parent.Size.Y.Scale
+                    Width = Width * Parent.Size.X.Scale
+                    Height = Height * Parent.Size.Y.Scale
+                end
 
                 Parent = Parent.Parent
             end

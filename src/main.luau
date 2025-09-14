@@ -9,6 +9,9 @@ local Mouse = UInput:GetMouse()
 LogService:Clear()
 LogService:Push("Program began running")
 
+local Group:UI_Group = Instance.new("UI_Group")
+Group.Parent = Game.Workspace
+
 local LeftFrame:UI2D = Instance.new("Frame")
 LeftFrame.Size = Udim.FromScale(0.6, 0.6)
 LeftFrame.Position = Udim.FromScale(0.5, 0.5) 
@@ -17,7 +20,7 @@ LeftFrame.Color = Color4.FromHex("#ab6a4f")
 LeftFrame:AddTag("Test")
 LogService:Push("Created frame 1")
 LeftFrame.ZIndex = 1
-LeftFrame.Parent = Game.Workspace
+LeftFrame.Parent = Group
 
 local RightFrame:UI2D = Instance.new("Frame")
 RightFrame.Size = Udim.FromScale(0.6, 0.6)
